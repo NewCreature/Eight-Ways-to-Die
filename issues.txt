@@ -1,0 +1,20 @@
+Version 1.2
+
+	[X]Update icons. We need these sizes: 512, 256, 128, 96, 72, 64, 48, 36, 32,
+	   24, 16. Don't forget, the icons need shadows. I will probably just make
+	   the standard icon size and resize and save. PSPs vector stuff seems to
+	   work okay with resizing the canvas.
+	   
+	[X]Add menu to title screen.
+	
+		[X]Since we will be using touch or keyboard, we should have screen
+		   dividers to indicate the various touch positions. These positions
+		   will be equivalent to the keyboard inputs, so we can number the
+		   positions accordingly. Options should be attached to certain keys.
+		   For instance, 1 will be game start. Touching the 1 section or
+		   pressing 1 will start the game.
+		   
+	[ ]Add privacy screen. This will either be displayed the first time the game
+	   is run or there will be a menu option to bring it up.
+	   
+	[ ]Create git repository.
