@@ -17,6 +17,7 @@ typedef struct
 	
 	bool active;
 	int type;
+	int size;
 	
 } RW_THREAT;
 

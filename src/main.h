@@ -1,6 +1,17 @@
 #ifndef RW_MAIN_H
 #define RW_MAIN_H
 
+#define RW_GAME_MODE_NORMAL 0
+#define RW_GAME_MODE_EASY   1
+#define RW_GAME_MODE_RHYTHM 2
+
+#define RW_CONTROL_MODE_HOT_SPOTS 0
+#define RW_CONTROL_MODE_SWIPE     1
+
+#define RW_SWIPE_INACTIVE 0
+#define RW_SWIPE_ACTIVE   1
+#define RW_SWIPE_USED     2
+
 #define RW_MAX_LEVELS       20
 
 #define RW_MAX_BITMAPS      64

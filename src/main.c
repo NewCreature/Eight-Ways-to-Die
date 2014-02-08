@@ -28,6 +28,14 @@ ALLEGRO_BITMAP * rw_bitmap[RW_MAX_BITMAPS] = {NULL};
 ALLEGRO_FONT * rw_font = NULL;
 ALLEGRO_SAMPLE * rw_sample[RW_MAX_SAMPLES] = {NULL};
 T3F_ATLAS * rw_atlas = NULL;
+int rw_game_mode = RW_GAME_MODE_NORMAL;
+int rw_control_mode = RW_CONTROL_MODE_SWIPE;
+
+/* swipe data */
+int rw_swipe_state = RW_SWIPE_INACTIVE;
+int rw_swipe_touch;
+int rw_swipe_x;
+int rw_swipe_y;
 int rw_score = 0;
 int rw_high_score = 1800;
 bool rw_new_high_score = false;
@@ -208,6 +216,7 @@ void rw_generate_threat(void)
 			rw_threat[i].angle = 0.0;
 			rw_threat[i].vangle = (float)((float)(t3f_rand(&rw_rng_state) % 100) / 400.0 - 0.125);
 			rw_threat[i].type = r;
+			rw_threat[i].size = 0;
 			rw_threat[i].active = true;
 			rw_threat_count++;
 			break;
@@ -330,6 +339,7 @@ void rw_initialize_game(void)
 	rw_camera_z = 0.0;
 	rw_camera_target_z = 0.0;
 	rw_alert_audio_ticks = 0;
+	rw_swipe_state = RW_SWIPE_INACTIVE;
 }
 
 static void rw_title_logo_logic(void)
@@ -341,13 +351,178 @@ static void rw_title_logo_logic(void)
 	}
 }
 
+/* read swipe controls and simulate keys, returns character */
+int rw_swipe_logic(void)
+{
+	int i;
+	double angle;
+	double slice;
+	double offset;
+	
+	switch(rw_swipe_state)
+	{
+		case RW_SWIPE_INACTIVE:
+		{
+			for(i = 0; i < T3F_MAX_TOUCHES; i++)
+			{
+				if(t3f_touch[i].active)
+				{
+					rw_swipe_touch = i;
+					rw_swipe_x = t3f_touch[i].x;
+					rw_swipe_y = t3f_touch[i].y;
+					rw_swipe_state = RW_SWIPE_ACTIVE;
+					return 0;
+				}
+			}
+			break;
+		}
+		case RW_SWIPE_ACTIVE:
+		{
+			if(!t3f_touch[rw_swipe_touch].active)
+			{
+				rw_swipe_state = RW_SWIPE_INACTIVE;
+				return 0;
+			}
+			else
+			{
+				if(rw_distance(t3f_touch[rw_swipe_touch].x, t3f_touch[rw_swipe_touch].y, rw_swipe_x, rw_swipe_y) >= 32.0)
+				{
+					slice = (ALLEGRO_PI * 2.0) / 8.0;
+					offset = slice / 2.0;
+					angle = atan2(t3f_touch[rw_swipe_touch].y - rw_swipe_y, t3f_touch[rw_swipe_touch].x - rw_swipe_x) + ALLEGRO_PI;
+					if(angle + offset > ALLEGRO_PI * 2.0)
+					{
+						angle -= ALLEGRO_PI * 2.0;
+					}
+					rw_swipe_state = RW_SWIPE_USED;
+					if(angle + offset >= slice * 7.0)
+					{
+						return '1';
+					}
+					else if(angle + offset >= slice * 6.0)
+					{
+						return '2';
+					}
+					else if(angle + offset >= slice * 5.0)
+					{
+						return '3';
+					}
+					else if(angle + offset >= slice * 4.0)
+					{
+						return '6';
+					}
+					else if(angle + offset >= slice * 3.0)
+					{
+						return '9';
+					}
+					else if(angle + offset >= slice * 2.0)
+					{
+						return '8';
+					}
+					else if(angle + offset >= slice * 1.0)
+					{
+						return '7';
+					}
+					else
+					{
+						return '4';
+					}
+				}
+			}
+			break;
+		}
+		case RW_SWIPE_USED:
+		{
+			if(!t3f_touch[rw_swipe_touch].active)
+			{
+				rw_swipe_state = RW_SWIPE_INACTIVE;
+			}
+			break;
+		}
+	}
+	return 0;
+}
+
+int rw_hotspot_logic(void)
+{
+	int i;
+	
+	/* read one touch at a time and simulate key press for first touch detected */
+	for(i = 0; i < T3F_MAX_TOUCHES; i++)
+	{
+		if(t3f_touch[i].active)
+		{
+			if(t3f_touch[i].x <= 160)
+			{
+				if(t3f_touch[i].y < t3f_display_top + rw_third)
+				{
+					return '7';
+				}
+				else if(t3f_touch[i].y < t3f_display_top + rw_third * 2.0)
+				{
+					return '4';
+				}
+				else
+				{
+					return '1';
+				}
+			}
+			else if(t3f_touch[i].x >= 640 - 160)
+			{
+				if(t3f_touch[i].y < t3f_display_top + rw_third)
+				{
+					return '9';
+				}
+				else if(t3f_touch[i].y < t3f_display_top + rw_third * 2.0)
+				{
+					return '6';
+				}
+				else
+				{
+					return '3';
+				}
+			}
+			else
+			{
+				if(t3f_touch[i].y < 240)
+				{
+					return '8';
+				}
+				else
+				{
+					return '2';
+				}
+			}
+			t3f_touch[i].active = false;
+			break;
+		}
+	}
+	return 0;
+}
+
+void rw_deal_damage(void)
+{
+	rw_damage++;
+	rw_damage_time = 20;
+	if(rw_damage > 4)
+	{
+		rw_destroy_everything();
+		rw_state = RW_STATE_GAME_OVER;
+		rw_intro_planet_z = rw_camera_z;
+		rw_alert_ticks = 0;
+		rw_swipe_state = RW_SWIPE_INACTIVE;
+	}
+}
+
 void rw_logic(void)
 {
 	int i, j, r;
 	float min_angle = 0.0, max_angle = 0.0;
 	int dt = 0;
 	int key = 0;
+	int touch_key;
 	
+	/* read keyboard input */
 	key = t3f_read_key(0);
 	if(key == 'q' || key == 'Q')
 	{
@@ -382,57 +557,6 @@ void rw_logic(void)
 		key = '3';
 	}
 	
-	/* read one touch at a time and simulate key press for first touch detected */
-	for(i = 0; i < T3F_MAX_TOUCHES; i++)
-	{
-		if(t3f_touch[i].active)
-		{
-			if(t3f_touch[i].x <= 160)
-			{
-				if(t3f_touch[i].y < t3f_display_top + rw_third)
-				{
-					key = '7';
-				}
-				else if(t3f_touch[i].y < t3f_display_top + rw_third * 2.0)
-				{
-					key = '4';
-				}
-				else
-				{
-					key = '1';
-				}
-			}
-			else if(t3f_touch[i].x >= 640 - 160)
-			{
-				if(t3f_touch[i].y < t3f_display_top + rw_third)
-				{
-					key = '9';
-				}
-				else if(t3f_touch[i].y < t3f_display_top + rw_third * 2.0)
-				{
-					key = '6';
-				}
-				else
-				{
-					key = '3';
-				}
-			}
-			else
-			{
-				if(t3f_touch[i].y < 240)
-				{
-					key = '8';
-				}
-				else
-				{
-					key = '2';
-				}
-			}
-			t3f_touch[i].active = false;
-			break;
-		}
-	}
-
 	switch(rw_state)
 	{
 		case RW_STATE_INTRO:
@@ -491,6 +615,12 @@ void rw_logic(void)
 		}
 		case RW_STATE_TITLE:
 		{
+			touch_key = rw_hotspot_logic();
+			if(touch_key)
+			{
+				key = touch_key;
+			}
+			
 			rw_intro_planet_angle += 0.01;
 			if(rw_intro_planet_angle >= ALLEGRO_PI * 2.0)
 			{
@@ -644,6 +774,22 @@ void rw_logic(void)
 		}
 		case RW_STATE_GAME:
 		{
+			if(rw_control_mode == RW_CONTROL_MODE_SWIPE)
+			{
+				touch_key = rw_swipe_logic();
+				if(touch_key)
+				{
+					key = touch_key;
+				}
+			}
+			else if(rw_control_mode == RW_CONTROL_MODE_HOT_SPOTS)
+			{
+				touch_key = rw_hotspot_logic();
+				if(touch_key)
+				{
+					key = touch_key;
+				}
+			}
 			switch(key)
 			{
 				case 27:
@@ -820,15 +966,7 @@ void rw_logic(void)
 							rw_generate_particle(rw_threat[i].x, rw_threat[i].y, min_angle, max_angle);
 						}
 						rw_threat[i].active = 0;
-						rw_damage++;
-						rw_damage_time = 20;
-						if(rw_damage > 4)
-						{
-							rw_destroy_everything();
-							rw_state = RW_STATE_GAME_OVER;
-							rw_intro_planet_z = rw_camera_z;
-							rw_alert_ticks = 0;
-						}
+						rw_deal_damage();
 					}
 					else if(rw_distance(320.0, 240.0, rw_threat[i].x, rw_threat[i].y) < 48.0)
 					{
@@ -891,12 +1029,7 @@ void rw_logic(void)
 							rw_generate_particle(rw_shot[i].x, rw_shot[i].y, min_angle, max_angle);
 						}
 						rw_shot[i].active = 0;
-						rw_damage++;
-						rw_damage_time = 20;
-						if(rw_damage > 4)
-						{
-							rw_state = RW_STATE_GAME_OVER;
-						}
+						rw_deal_damage();
 					}
 					else if(rw_distance(320.0, 240.0, rw_shot[i].x, rw_shot[i].y) < 48.0)
 					{
@@ -1095,11 +1228,8 @@ static void rw_render_hover_text(ALLEGRO_FONT * fp, float x, float y, int flags,
 	al_draw_text(fp, highlight ? al_map_rgba_f(1.0, 1.0, 1.0, 1.0) : al_map_rgba_f(0.25, 0.25, 0.25, 0.25), x, y, flags, text);
 }
 
-void rw_render(void)
+void rw_render_menu(void)
 {
-	int i;
-	ALLEGRO_COLOR color;
-	float alpha, beta;
 	float mouse_x = 320.0, mouse_y = 240.0;
 	
 	if((t3f_flags & T3F_USE_MOUSE) && !(t3f_flags & T3F_USE_TOUCH))
@@ -1107,6 +1237,53 @@ void rw_render(void)
 		mouse_x = t3f_mouse_x;
 		mouse_y = t3f_mouse_y;
 	}
+	al_draw_tinted_bitmap(rw_bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 160.0 - 4.0, t3f_display_top + rw_third * 2.0 - 4.0, 0);
+	al_draw_tinted_bitmap(rw_bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 640.0 - 160.0 - 4.0, t3f_display_top + rw_third * 2.0 - 4.0, 0);
+	rw_render_hover_text(rw_font, 160.0 / 2.0, t3f_display_top + rw_third * 2.0 + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x <= 160 && mouse_y >= t3f_display_top + rw_third * 2.0, "1");
+	rw_render_hover_text(rw_font, 320, t3f_display_top + rw_third * 2.0 + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x > 160 && mouse_x < 640 - 160 && mouse_y >= t3f_display_top + rw_third * 2.0, "2");
+	rw_render_hover_text(rw_font, 640.0 - 160.0 / 2.0, t3f_display_top + rw_third * 2.0 + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x >= 640 - 160 && mouse_y >= t3f_display_top + rw_third * 2.0, "3");
+	rw_render_hover_text(rw_font, 160.0 / 2.0, t3f_display_top + rw_third * 2.0 + rw_third / 2.0, ALLEGRO_ALIGN_CENTRE, mouse_x <= 160 && mouse_y >= t3f_display_top + rw_third * 2.0, "PRIVACY INFO");
+	rw_render_hover_text(rw_font, 320, t3f_display_top + rw_third * 2.0 + rw_third / 2.0, ALLEGRO_ALIGN_CENTRE, mouse_x > 160 && mouse_x < 640 - 160 && mouse_y >= t3f_display_top + rw_third * 2.0, "START GAME");
+	rw_render_hover_text(rw_font, 640.0 - 160.0 / 2.0, t3f_display_top + rw_third * 2.0 + rw_third / 2.0, ALLEGRO_ALIGN_CENTRE, mouse_x >= 640 - 160 && mouse_y >= t3f_display_top + rw_third * 2.0, "TOGGLE MUSIC");
+}
+
+void rw_render_hot_spots(void)
+{
+	float mouse_x = 320.0, mouse_y = 240.0;
+	
+	if((t3f_flags & T3F_USE_MOUSE) && !(t3f_flags & T3F_USE_TOUCH))
+	{
+		mouse_x = t3f_mouse_x;
+		mouse_y = t3f_mouse_y;
+	}
+	al_draw_tinted_bitmap(rw_bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 160.0 - 4.0, t3f_display_top + rw_third - 4.0, 0);
+	al_draw_tinted_bitmap(rw_bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 640.0 - 160.0 - 4.0, t3f_display_top + rw_third - 4.0, 0);
+	al_draw_tinted_bitmap(rw_bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 160.0 - 4.0, t3f_display_top + rw_third * 2.0 - 4.0, 0);
+	al_draw_tinted_bitmap(rw_bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 640.0 - 160.0 - 4.0, t3f_display_top + rw_third * 2.0 - 4.0, 0);
+	rw_render_hover_text(rw_font, 160.0 / 2.0, t3f_display_top + rw_third * 2.0 + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x <= 160 && mouse_y >= t3f_display_top + rw_third * 2.0, "1");
+	rw_render_hover_text(rw_font, 320, t3f_display_top + rw_third * 2.0 + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x > 160 && mouse_x < 640 - 160 && mouse_y >= t3f_display_top + rw_third * 2.0, "2");
+	rw_render_hover_text(rw_font, 640.0 - 160.0 / 2.0, t3f_display_top + rw_third * 2.0 + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x >= 640 - 160 && mouse_y >= t3f_display_top + rw_third * 2.0, "3");
+	rw_render_hover_text(rw_font, 160.0 / 2.0, t3f_display_top + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x <= 160 && mouse_y < t3f_display_top + rw_third, "7");
+	rw_render_hover_text(rw_font, 160.0 / 2.0, t3f_display_top + rw_third + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x <= 160 && mouse_y > t3f_display_top + rw_third && mouse_y < t3f_display_top + rw_third * 2.0, "4");
+	rw_render_hover_text(rw_font, 640.0 - 160.0 / 2.0, t3f_display_top + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x >= 640 - 160 && mouse_y < t3f_display_top + rw_third, "9");
+	rw_render_hover_text(rw_font, 640.0 - 160.0 / 2.0, t3f_display_top + rw_third + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x >= 640 - 160 && mouse_y > t3f_display_top + rw_third && mouse_y < t3f_display_top + rw_third * 2.0, "6");
+	rw_render_hover_text(rw_font, 320.0, t3f_display_top + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x > 160 && mouse_x < 640 - 160 && mouse_y < t3f_display_top + rw_third, "8");
+}
+
+void rw_render_swipe(void)
+{
+	if(rw_swipe_state == RW_SWIPE_ACTIVE)
+	{
+		al_draw_tinted_bitmap(rw_bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), rw_swipe_x - 4.0, rw_swipe_y - 4.0, 0);
+		al_draw_tinted_bitmap(rw_bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), t3f_touch[rw_swipe_touch].x - 4.0, t3f_touch[rw_swipe_touch].y - 4.0, 0);
+	}
+}
+
+void rw_render(void)
+{
+	int i;
+	ALLEGRO_COLOR color;
+	float alpha, beta;
 	
 	al_hold_bitmap_drawing(true);
 	switch(rw_state)
@@ -1146,6 +1323,7 @@ void rw_render(void)
 			t3f_draw_bitmap(rw_bitmap[RW_BITMAP_LOGO], al_map_rgba_f(alpha, alpha, alpha, alpha), 320.0 - (float)al_get_bitmap_width(rw_bitmap[RW_BITMAP_LOGO]) / 2, 240 - al_get_bitmap_height(rw_bitmap[RW_BITMAP_LOGO]) - 128, rw_logo_z + 10.0, 0);
 			alpha = 1.0 + rw_logo_z / 10.0;
 			t3f_draw_bitmap(rw_bitmap[RW_BITMAP_LOGO], al_map_rgba_f(alpha, alpha, alpha, alpha), 320.0 - (float)al_get_bitmap_width(rw_bitmap[RW_BITMAP_LOGO]) / 2, 240 - al_get_bitmap_height(rw_bitmap[RW_BITMAP_LOGO]) - 128, rw_logo_z, 0);
+			rw_render_menu();
 			break;
 		}
 		case RW_STATE_PRIVACY:
@@ -1231,39 +1409,19 @@ void rw_render(void)
 			al_draw_textf(rw_font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320 - al_get_text_width(rw_font, "HIGH SCORE - 0:00:00") / 2, t3f_display_top, 0, "HIGH SCORE - %d:%02d:%02d", rw_high_score / 3600, (rw_high_score / 60) % 60, (int)(((float)(rw_high_score % 60) / 60.0) * 100.0) % 100);
 			al_draw_textf(rw_font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320 - al_get_text_width(rw_font, "SCORE - 0:00:00") / 2, t3f_display_top + 16, 0, "SCORE - %d:%02d:%02d", rw_score / 3600, (rw_score / 60) % 60, (int)(((float)(rw_score % 60) / 60.0) * 100.0) % 100);
 			al_draw_textf(rw_font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320, t3f_display_top + 32, ALLEGRO_ALIGN_CENTRE, "LEVEL - %d", rw_level + 1);
+			if(rw_control_mode == RW_CONTROL_MODE_HOT_SPOTS)
+			{
+				rw_render_hot_spots();
+			}
+			else if(rw_control_mode == RW_CONTROL_MODE_SWIPE)
+			{
+				rw_render_swipe();
+			}
 		//	al_font_textprintf_centre(rw_font, 320, 32, "%d : %f : %f : %f", rw_ship[0].way, rw_eight_ways[rw_ship[0].way], rw_ship[0].angle, rw_ship[0].vangle);
 			break;
 		}
 	}
 	
-	/* render guides */
-	if(rw_state != RW_STATE_INTRO && rw_state != RW_STATE_EXIT && rw_state != RW_STATE_PRIVACY)
-	{
-		if(rw_state == RW_STATE_GAME)
-		{
-			al_draw_tinted_bitmap(rw_bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 160.0 - 4.0, t3f_display_top + rw_third - 4.0, 0);
-			al_draw_tinted_bitmap(rw_bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 640.0 - 160.0 - 4.0, t3f_display_top + rw_third - 4.0, 0);
-		}
-		al_draw_tinted_bitmap(rw_bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 160.0 - 4.0, t3f_display_top + rw_third * 2.0 - 4.0, 0);
-		al_draw_tinted_bitmap(rw_bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 640.0 - 160.0 - 4.0, t3f_display_top + rw_third * 2.0 - 4.0, 0);
-		rw_render_hover_text(rw_font, 160.0 / 2.0, t3f_display_top + rw_third * 2.0 + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x <= 160 && mouse_y >= t3f_display_top + rw_third * 2.0, "1");
-		rw_render_hover_text(rw_font, 320, t3f_display_top + rw_third * 2.0 + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x > 160 && mouse_x < 640 - 160 && mouse_y >= t3f_display_top + rw_third * 2.0, "2");
-		rw_render_hover_text(rw_font, 640.0 - 160.0 / 2.0, t3f_display_top + rw_third * 2.0 + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x >= 640 - 160 && mouse_y >= t3f_display_top + rw_third * 2.0, "3");
-		if(rw_state == RW_STATE_TITLE)
-		{
-			rw_render_hover_text(rw_font, 160.0 / 2.0, t3f_display_top + rw_third * 2.0 + rw_third / 2.0, ALLEGRO_ALIGN_CENTRE, mouse_x <= 160 && mouse_y >= t3f_display_top + rw_third * 2.0, "PRIVACY INFO");
-			rw_render_hover_text(rw_font, 320, t3f_display_top + rw_third * 2.0 + rw_third / 2.0, ALLEGRO_ALIGN_CENTRE, mouse_x > 160 && mouse_x < 640 - 160 && mouse_y >= t3f_display_top + rw_third * 2.0, "START GAME");
-			rw_render_hover_text(rw_font, 640.0 - 160.0 / 2.0, t3f_display_top + rw_third * 2.0 + rw_third / 2.0, ALLEGRO_ALIGN_CENTRE, mouse_x >= 640 - 160 && mouse_y >= t3f_display_top + rw_third * 2.0, "TOGGLE MUSIC");
-		}
-		if(rw_state == RW_STATE_GAME)
-		{
-			rw_render_hover_text(rw_font, 160.0 / 2.0, t3f_display_top + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x <= 160 && mouse_y < t3f_display_top + rw_third, "7");
-			rw_render_hover_text(rw_font, 160.0 / 2.0, t3f_display_top + rw_third + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x <= 160 && mouse_y > t3f_display_top + rw_third && mouse_y < t3f_display_top + rw_third * 2.0, "4");
-			rw_render_hover_text(rw_font, 640.0 - 160.0 / 2.0, t3f_display_top + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x >= 640 - 160 && mouse_y < t3f_display_top + rw_third, "9");
-			rw_render_hover_text(rw_font, 640.0 - 160.0 / 2.0, t3f_display_top + rw_third + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x >= 640 - 160 && mouse_y > t3f_display_top + rw_third && mouse_y < t3f_display_top + rw_third * 2.0, "6");
-			rw_render_hover_text(rw_font, 320.0, t3f_display_top + rw_third / 2.0 - al_get_font_line_height(rw_font), ALLEGRO_ALIGN_CENTRE, mouse_x > 160 && mouse_x < 640 - 160 && mouse_y < t3f_display_top + rw_third, "8");
-		}
-	}
 	al_hold_bitmap_drawing(false);
 }
 
