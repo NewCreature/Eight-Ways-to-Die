@@ -1,8 +1,10 @@
 #ifndef RW_SHIELD_H
-#define RW_SHEILD_H
+#define RW_SHIELD_H
 
 #define RW_MAX_SHIELDS 8
 #define RW_SHIELD_MAX_LIFE 12
+
+#include "t3f/t3f.h"
 
 typedef struct
 {
