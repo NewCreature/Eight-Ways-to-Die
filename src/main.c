@@ -13,6 +13,7 @@
 
 #include "state_intro.h"
 #include "state_title.h"
+#include "state_privacy.h"
 #include "state_game.h"
 
 #include "init.h"
@@ -89,43 +90,7 @@ void rw_logic(void * data)
 {
 	int i;
 	int dt = 0;
-	int key = 0;
 	RW_INSTANCE * ip = (RW_INSTANCE *)data;
-	
-	/* read keyboard input */
-	key = t3f_read_key(0);
-	if(key == 'q' || key == 'Q')
-	{
-		key = '7';
-	}
-	else if(key == 'w' || key == 'W')
-	{
-		key = '8';
-	}
-	else if(key == 'e' || key == 'E')
-	{
-		key = '9';
-	}
-	else if(key == 'a' || key == 'A')
-	{
-		key = '4';
-	}
-	else if(key == 'd' || key == 'D')
-	{
-		key = '6';
-	}
-	else if(key == 'z' || key == 'Z')
-	{
-		key = '1';
-	}
-	else if(key == '5' || key == 's' || key == 'S' || key == 'x' || key == 'X')
-	{
-		key = '2';
-	}
-	else if(key == 'c' || key == 'C')
-	{
-		key = '3';
-	}
 	
 	switch(ip->state)
 	{
@@ -141,13 +106,7 @@ void rw_logic(void * data)
 		}
 		case RW_STATE_PRIVACY:
 		{
-			rw_title_logo_logic(ip);
-			if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK] || key)
-			{
-				ip->state = RW_STATE_TITLE;
-				t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
-				t3f_key[ALLEGRO_KEY_BACK] = 0;
-			}
+			rw_state_privacy_logic(ip);
 			break;
 		}
 		case RW_STATE_EXIT:
@@ -284,15 +243,7 @@ void rw_render(void * data)
 		}
 		case RW_STATE_PRIVACY:
 		{
-			al_clear_to_color(al_map_rgb(0, 0, 0));
-			alpha = -ip->logo_z / 10.0;
-			t3f_draw_bitmap(ip->bitmap[RW_BITMAP_LOGO], al_map_rgba_f(alpha, alpha, alpha, alpha), 320.0 - (float)al_get_bitmap_width(ip->bitmap[RW_BITMAP_LOGO]) / 2, 240 - al_get_bitmap_height(ip->bitmap[RW_BITMAP_LOGO]) - 128, ip->logo_z + 10.0, 0);
-			alpha = 1.0 + ip->logo_z / 10.0;
-			t3f_draw_bitmap(ip->bitmap[RW_BITMAP_LOGO], al_map_rgba_f(alpha, alpha, alpha, alpha), 320.0 - (float)al_get_bitmap_width(ip->bitmap[RW_BITMAP_LOGO]) / 2, 240 - al_get_bitmap_height(ip->bitmap[RW_BITMAP_LOGO]) - 128, ip->logo_z, 0);
-			al_draw_text(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 160, 240 - al_get_font_line_height(ip->font) * 2.0, 0, "THIS GAME ONLY STORES SETTINGS");
-			al_draw_text(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 160, 240 - al_get_font_line_height(ip->font) * 1.0, 0, "AND SCORES LOCALLY. IT WILL NOT");
-			al_draw_text(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 160, 240 + al_get_font_line_height(ip->font) * 0.0, 0, "SHARE ANY INFORMATION OVER");
-			al_draw_text(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 160, 240 + al_get_font_line_height(ip->font) * 1.0, 0, "THE INTERNET.");
+			rw_state_privacy_render(ip);
 			break;
 		}
 		case RW_STATE_EXIT:
