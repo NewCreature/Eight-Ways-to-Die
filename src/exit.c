@@ -8,7 +8,6 @@ int rw_exit(RW_INSTANCE * ip)
 {
 	int i;
 	
-	al_destroy_display(t3f_display);
 	rw_save_high_score(ip, t3f_get_filename(t3f_data_path, "rw.hs"));
 	t3f_stop_music();
 	for(i = 0; i < RW_MAX_BITMAPS; i++)

@@ -37,11 +37,6 @@ int rw_initialize(RW_INSTANCE * ip, int argc, char * argv[])
 	{
 		return 0;
 	}
-	if(!t3f_locate_resource("data/world.png"))
-	{
-		printf("Cannot locate resources!\n");
-		return 0;
-	}
 	
 	t3f_set_event_handler(rw_event_handler);
 	
