@@ -8,6 +8,7 @@
 #include "threat.h"
 #include "ship.h"
 #include "particle.h"
+#include "music.h"
 
 #include "control_hotspot.h"
 
@@ -15,81 +16,14 @@
 #include "state_title.h"
 #include "state_privacy.h"
 #include "state_game.h"
+#include "state_game_over.h"
+#include "state_exit.h"
 
 #include "init.h"
 #include "exit.h"
 
-void rw_toggle_music(RW_INSTANCE * ip)
-{
-	if(ip->music_on)
-	{
-		if(t3f_stream)
-		{
-			al_stop_timer(t3f_timer);
-			t3f_stop_music();
-			al_start_timer(t3f_timer);
-		}
-		ip->music_on = false;
-	}
-	else
-	{
-		ip->music_on = true;
-		switch(ip->state)
-		{
-			case RW_STATE_INTRO:
-			case RW_STATE_TITLE:
-			case RW_STATE_GAME_OUT:
-			{
-				t3f_play_music("data/title.xm");
-				break;
-			}
-			case RW_STATE_GAME_IN:
-			case RW_STATE_GAME:
-			case RW_STATE_GAME_OVER:
-			{
-				t3f_play_music("data/bgm.it");
-				break;
-			}
-		}
-	}
-}
-
-void rw_event_handler(ALLEGRO_EVENT * event, void * data)
-{
-	RW_INSTANCE * ip = (RW_INSTANCE *)data;
-	switch(event->type)
-	{
-		case ALLEGRO_EVENT_DISPLAY_CLOSE:
-		{
-			if(ip->state == RW_STATE_TITLE)
-			{
-				ip->state = RW_STATE_EXIT;
-			}
-			else
-			{
-				t3f_event_handler(event);
-			}
-			break;
-		}
-		case ALLEGRO_EVENT_DISPLAY_RESIZE:
-		{
-			t3f_event_handler(event);
-			ip->vertical_scale = (t3f_display_bottom - t3f_display_top) / 480.0;
-			ip->third = (t3f_display_bottom - t3f_display_top) / 3.0;
-		}
-		/* pass the event through to T3F for handling by default */
-		default:
-		{
-			t3f_event_handler(event);
-			break;
-		}
-	}
-}
-
 void rw_logic(void * data)
 {
-	int i;
-	int dt = 0;
 	RW_INSTANCE * ip = (RW_INSTANCE *)data;
 	
 	switch(ip->state)
@@ -111,12 +45,7 @@ void rw_logic(void * data)
 		}
 		case RW_STATE_EXIT:
 		{
-			ip->intro_planet_z += 10.0;
-			ip->intro_planet_angle += 0.01;
-			if(ip->intro_planet_z >= 0.0)
-			{
-				ip->quit = 1;
-			}
+			rw_state_exit_logic(ip);
 			break;
 		}
 		case RW_STATE_GAME_IN:
@@ -142,73 +71,7 @@ void rw_logic(void * data)
 		}
 		case RW_STATE_GAME_OVER:
 		{
-			int pcount = 0;
-			for(i = 0; i < RW_MAX_PARTICLES; i++)
-			{
-				if(ip->particle[i].active)
-				{
-					ip->particle[i].x += ip->particle[i].vx;
-					ip->particle[i].y += ip->particle[i].vy;
-					ip->particle[i].life--;
-					if(ip->particle[i].life <= 0)
-					{
-						ip->particle[i].active = false;
-					}
-					pcount++;
-				}
-			}
-			if(pcount <= 0)
-			{
-				if(ip->music_on)
-				{
-					t3f_play_music("data/title.xm");
-				}
-				ip->state = RW_STATE_GAME_OUT;
-			}
-			
-			for(i = 0; i < RW_MAX_SHIELDS; i++)
-			{
-				if(ip->shield_generator.shield[i].life > 0)
-				{
-					ip->shield_generator.shield[i].life--;
-					if(ip->shield_generator.shield[i].life <= 0)
-					{
-						ip->shield_generator.shield[i].active = false;
-					}
-				}
-			}
-			switch(ip->damage)
-			{
-				case 0:
-				{
-					dt = 0;
-					break;
-				}
-				case 1:
-				{
-					dt = 5;
-					break;
-				}
-				case 2:
-				{
-					dt = 10;
-					break;
-				}
-				case 3:
-				{
-					dt = 15;
-					break;
-				}
-				case 4:
-				{
-					dt = 20;
-					break;
-				}
-			}
-			if(ip->damage_time > dt)
-			{
-				ip->damage_time--;
-			}
+			rw_state_game_over_logic(ip);
 			break;
 		}
 		case RW_STATE_GAME:

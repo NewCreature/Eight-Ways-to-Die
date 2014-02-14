@@ -221,6 +221,42 @@ static void rw_deal_damage(RW_INSTANCE * ip)
 	}
 }
 
+void rw_state_game_particle_logic(RW_INSTANCE * ip)
+{
+	int i;
+
+	for(i = 0; i < RW_MAX_PARTICLES; i++)
+	{
+		if(ip->particle[i].active)
+		{
+			ip->particle[i].x += ip->particle[i].vx;
+			ip->particle[i].y += ip->particle[i].vy;
+			ip->particle[i].life--;
+			if(ip->particle[i].life <= 0)
+			{
+				ip->particle[i].active = false;
+			}
+		}
+	}
+}
+
+void rw_state_game_shield_logic(RW_INSTANCE * ip)
+{
+	int i;
+	
+	for(i = 0; i < RW_MAX_SHIELDS; i++)
+	{
+		if(ip->shield_generator.shield[i].life > 0)
+		{
+			ip->shield_generator.shield[i].life--;
+			if(ip->shield_generator.shield[i].life <= 0)
+			{
+				ip->shield_generator.shield[i].active = false;
+			}
+		}
+	}
+}
+
 void rw_state_game_logic(RW_INSTANCE * ip)
 {
 	int key = 0;
@@ -317,31 +353,9 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 		ip->camera_z -= 0.5;
 	}
 	
-	for(i = 0; i < RW_MAX_PARTICLES; i++)
-	{
-		if(ip->particle[i].active)
-		{
-			ip->particle[i].x += ip->particle[i].vx;
-			ip->particle[i].y += ip->particle[i].vy;
-			ip->particle[i].life--;
-			if(ip->particle[i].life <= 0)
-			{
-				ip->particle[i].active = false;
-			}
-		}
-	}
+	rw_state_game_particle_logic(ip);
+	rw_state_game_shield_logic(ip);
 	
-	for(i = 0; i < RW_MAX_SHIELDS; i++)
-	{
-		if(ip->shield_generator.shield[i].life > 0)
-		{
-			ip->shield_generator.shield[i].life--;
-			if(ip->shield_generator.shield[i].life <= 0)
-			{
-				ip->shield_generator.shield[i].active = false;
-			}
-		}
-	}
 	switch(ip->damage)
 	{
 		case 0:

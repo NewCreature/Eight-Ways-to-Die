@@ -5,6 +5,9 @@
 
 void rw_initialize_game(RW_INSTANCE * ip);
 
+void rw_state_game_particle_logic(RW_INSTANCE * ip);
+void rw_state_game_shield_logic(RW_INSTANCE * ip);
+
 void rw_state_game_logic(RW_INSTANCE * ip);
 void rw_state_game_render(RW_INSTANCE * ip);
 

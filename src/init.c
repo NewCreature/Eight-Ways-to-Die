@@ -3,6 +3,7 @@
 #include "main.h"
 #include "ocdfont.h"
 #include "high_score.h"
+#include "event.h"
 
 static void rw_atlas_bitmap(T3F_ATLAS * ap, ALLEGRO_BITMAP ** bitmap)
 {

@@ -4,7 +4,8 @@
 
 #include "control_hotspot.h"
 
-#include "main.h"
+#include "music.h"
+
 #include "state_game.h"
 
 static void rw_render_menu(RW_INSTANCE * ip)
