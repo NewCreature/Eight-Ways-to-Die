@@ -7,6 +7,7 @@ void rw_render_hover_text(ALLEGRO_FONT * fp, float x, float y, int flags, bool h
 
 int rw_hotspot_logic(RW_INSTANCE * ip)
 {
+	int key = 0;
 	int i;
 	
 	/* read one touch at a time and simulate key press for first touch detected */
@@ -18,48 +19,48 @@ int rw_hotspot_logic(RW_INSTANCE * ip)
 			{
 				if(t3f_touch[i].y < t3f_display_top + ip->third)
 				{
-					return '7';
+					key = '7';
 				}
 				else if(t3f_touch[i].y < t3f_display_top + ip->third * 2.0)
 				{
-					return '4';
+					key = '4';
 				}
 				else
 				{
-					return '1';
+					key = '1';
 				}
 			}
 			else if(t3f_touch[i].x >= 640 - 160)
 			{
 				if(t3f_touch[i].y < t3f_display_top + ip->third)
 				{
-					return '9';
+					key = '9';
 				}
 				else if(t3f_touch[i].y < t3f_display_top + ip->third * 2.0)
 				{
-					return '6';
+					key = '6';
 				}
 				else
 				{
-					return '3';
+					key = '3';
 				}
 			}
 			else
 			{
 				if(t3f_touch[i].y < 240)
 				{
-					return '8';
+					key = '8';
 				}
 				else
 				{
-					return '2';
+					key = '2';
 				}
 			}
 			t3f_touch[i].active = false;
 			break;
 		}
 	}
-	return 0;
+	return key;
 }
 
 void rw_render_hot_spots(RW_INSTANCE * ip)
