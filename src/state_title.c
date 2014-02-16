@@ -2,6 +2,7 @@
 
 #include "t3f/draw.h"
 
+#include "control_keyboard.h"
 #include "control_hotspot.h"
 
 #include "music.h"
@@ -40,6 +41,8 @@ void rw_state_title_logic(RW_INSTANCE * ip)
 {
 	int key = 0;
 	int touch_key = 0;
+	
+	key = rw_keyboard_logic(ip);
 	
 	touch_key = rw_hotspot_logic(ip);
 	if(touch_key)

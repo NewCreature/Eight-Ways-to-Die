@@ -3,6 +3,7 @@
 
 #include "instance.h"
 
+#include "control_keyboard.h"
 #include "control_swipe.h"
 #include "control_hotspot.h"
 
@@ -264,6 +265,8 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 	int dt = 0;
 	float min_angle, max_angle;
 	int i, j, r;
+	
+	key = rw_keyboard_logic(ip);
 	
 	if(ip->control_mode == RW_CONTROL_MODE_SWIPE)
 	{
