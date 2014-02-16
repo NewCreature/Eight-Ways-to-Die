@@ -14,7 +14,17 @@ Version 1.2
 		   For instance, 1 will be game start. Touching the 1 section or
 		   pressing 1 will start the game.
 		   
-	[ ]Add privacy screen. This will either be displayed the first time the game
+	[X]Add privacy screen. This will either be displayed the first time the game
 	   is run or there will be a menu option to bring it up.
 	   
-	[ ]Create git repository.
+	[X]Create git repository.
+	
+	[ ]Add difficulty setting. Easy mode should activate three shields at once.
+	
+	[ ]Add rhythm mode.
+	
+	[ ]Add new threat type.
+	
+	[ ]Rebalance difficulty. I think the speed of threats should be limited
+	   based on the level. Later levels would generate more and faster threats.
+	   The first level should be easy to beat.
