@@ -32,6 +32,7 @@ RW_INSTANCE * rw_create_instance(void)
 		ip->atlas = NULL;
 		ip->game_mode = RW_GAME_MODE_NORMAL;
 		ip->control_mode = RW_CONTROL_MODE_SWIPE;
+		ip->rhythm_config = NULL;
 
 		/* swipe data */
 		ip->swipe_state = RW_SWIPE_INACTIVE;

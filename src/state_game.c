@@ -49,45 +49,53 @@ static int rw_level_prob[RW_MAX_LEVELS] =
 
 static float rw_level_camera_z[RW_MAX_LEVELS] =
 {
-	   0.0,  -10.0,  -20.0,  -30.0,  -40.0,
-	 -50.0,  -60.0,  -70.0,  -80.0,  -90.0,
-	-100.0, -110.0, -120.0, -130.0, -140.0,
-	-150.0, -160.0, -170.0, -180.0, -190.0
+	   0.0,   10.0,   20.0,   30.0,   40.0,
+	  50.0,   60.0,   70.0,   80.0,   90.0,
+	 100.0,  110.0,  120.0,  130.0,  140.0,
+	 150.0,  160.0,  170.0,  180.0,  190.0
 };
 
-static void rw_generate_threat(RW_INSTANCE * ip)
+/* reposition threat so that it hits planet in 'ticks' amount of time */
+static void rw_reposition_threat(RW_THREAT * tp, int ticks)
+{
+	double d;
+	
+	d = tp->gen_speed * (double)ticks + 36.0;
+	
+	tp->x = 320.0 + cos(tp->gen_angle) * d;
+	tp->y = 240.0 + sin(tp->gen_angle) * d;
+}
+
+static int rw_generate_threat(RW_INSTANCE * ip)
 {
 	int i;
 	int r;
-	float rs;
-	float a;
-	float ar;
 	
 	for(i = 0; i < RW_MAX_THREATS; i++)
 	{
 		if(!ip->threat[i].active)
 		{
 			r = t3f_rand(&ip->rng_state) % 8;
-			rs = 1.6 + (float)(t3f_rand(&ip->rng_state) % 100) / 40.0;
+			ip->threat[i].gen_speed = 1.6 + (float)(t3f_rand(&ip->rng_state) % 100) / 40.0;
 			if(r == 1 && r == 5)
 			{
-				rs *= ip->vertical_scale;
+				ip->threat[i].gen_speed *= ip->vertical_scale;
 			}
-			ar = (float)(t3f_rand(&ip->rng_state) % 100) / 1000.0 - 0.05;
-			a = rw_eight_ways[r] + (t3f_drand(&ip->rng_state) - 0.5) / 10.0;
-			ip->threat[i].x = 320.0 + cos(a) * 400.0;
-			ip->threat[i].y = 240.0 + sin(a) * 400.0;
-			ip->threat[i].vx = cos(a) * -rs;
-			ip->threat[i].vy = sin(a) * -rs;
+			ip->threat[i].gen_angle = rw_eight_ways[r] + (t3f_drand(&ip->rng_state) - 0.5) / 10.0;
+			ip->threat[i].x = 320.0 + cos(ip->threat[i].gen_angle) * 400.0;
+			ip->threat[i].y = 240.0 + sin(ip->threat[i].gen_angle) * 400.0;
+			ip->threat[i].vx = cos(ip->threat[i].gen_angle) * -ip->threat[i].gen_speed;
+			ip->threat[i].vy = sin(ip->threat[i].gen_angle) * -ip->threat[i].gen_speed;
 			ip->threat[i].angle = 0.0;
 			ip->threat[i].vangle = (float)((float)(t3f_rand(&ip->rng_state) % 100) / 400.0 - 0.125);
 			ip->threat[i].type = r;
 			ip->threat[i].size = 0;
 			ip->threat[i].active = true;
 			ip->threat_count++;
-			break;
+			return i;
 		}
 	}
+	return -1;
 }
 
 static void rw_generate_particle(RW_INSTANCE * ip, float x, float y, float min_angle, float max_angle)
@@ -164,9 +172,42 @@ static void rw_destroy_everything(RW_INSTANCE * ip)
 	}
 }
 
+static void rw_get_next_beat(RW_INSTANCE * ip)
+{
+	const char * val;
+	char buf[64] = {0};
+	double time_ratio;
+	
+	sprintf(buf, "beat %d", ip->current_beat);
+	val = al_get_config_value(ip->rhythm_config, buf, "pos");
+	if(val)
+	{
+		time_ratio = 60.0 / 1000.0;
+		ip->next_beat = (double)atoi(val) * time_ratio;
+		ip->current_beat++;
+	}
+}
+
+static void rw_get_next_note(RW_INSTANCE * ip)
+{
+	const char * val;
+	char buf[64] = {0};
+	double time_ratio;
+	
+	sprintf(buf, "note %d", ip->current_note);
+	val = al_get_config_value(ip->rhythm_config, buf, "pos");
+	if(val)
+	{
+		time_ratio = 60.0 / 1000.0;
+		ip->next_note = (double)atoi(val) * time_ratio;
+		ip->current_note++;
+	}
+}
+
 void rw_initialize_game(RW_INSTANCE * ip)
 {
 	int i;
+	const char * val;
 	
 	for(i = 0; i < RW_MAX_SHIELDS; i++)
 	{
@@ -204,8 +245,42 @@ void rw_initialize_game(RW_INSTANCE * ip)
 	ip->alert_ticks = 0;
 	ip->camera_z = 0.0;
 	ip->camera_target_z = 0.0;
+	ip->planet_z = 0.0;
 	ip->alert_audio_ticks = 0;
 	ip->swipe_state = RW_SWIPE_INACTIVE;
+	if(ip->game_mode == RW_GAME_MODE_RHYTHM)
+	{
+		ip->rhythm_config = al_load_config_file("data/rhythm.cfg");
+		if(ip->rhythm_config)
+		{
+			ip->rhythm_tick = 0;
+			val = al_get_config_value(ip->rhythm_config, "header", "beats");
+			if(val)
+			{
+				ip->beats = atoi(val);
+			}
+			ip->current_beat = 0;
+			rw_get_next_beat(ip);
+			val = al_get_config_value(ip->rhythm_config, "header", "notes");
+			if(val)
+			{
+				ip->notes = atoi(val);
+			}
+			ip->current_note = 0;
+			rw_get_next_note(ip);
+		}
+		if(ip->music_on)
+		{
+			t3f_play_music("data/rhythm.ogg");
+		}
+	}
+	else
+	{
+		if(ip->music_on)
+		{
+			t3f_play_music("data/bgm.it");
+		}
+	}
 }
 
 static void rw_deal_damage(RW_INSTANCE * ip)
@@ -265,6 +340,16 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 	int dt = 0;
 	float min_angle, max_angle;
 	int i, j, r;
+	
+	if(ip->game_mode == RW_GAME_MODE_RHYTHM)
+	{
+		ip->rhythm_tick++;
+		if(ip->rhythm_tick >= ip->next_beat)
+		{
+			ip->planet_z = -50.0;
+			rw_get_next_beat(ip);
+		}
+	}
 	
 	key = rw_keyboard_logic(ip);
 	
@@ -351,9 +436,13 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 		}
 	}
 	/* camera logic */
-	if(ip->camera_z > rw_level_camera_z[ip->level])
+	if(ip->camera_z < rw_level_camera_z[ip->level])
 	{
-		ip->camera_z -= 0.5;
+		ip->camera_z += 0.5;
+	}
+	if(ip->planet_z < 0)
+	{
+		ip->planet_z += 5.0;
 	}
 	
 	rw_state_game_particle_logic(ip);
@@ -649,38 +738,50 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 	}
 	
 	/* generate enemies */
-	if(ip->ticks > rw_level_threat_ticks[ip->level] && t3f_rand(&ip->rng_state) % rw_level_prob_total[ip->level] < rw_level_prob[ip->level])
+	if(ip->game_mode == RW_GAME_MODE_RHYTHM)
 	{
-		rw_generate_threat(ip);
-		if(ip->threat_count > 15 && ip->level < 19)
+		if(ip->rhythm_tick >= ip->next_note - 240)
 		{
-			ip->threat_count = 0;
-			al_play_sample(ip->sample[RW_SAMPLE_LEVEL_UP], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-			ip->level++;
-			if(ip->level == 9)
-			{
-				ip->ship[0].way = t3f_rand(&ip->rng_state) % 8;
-				ip->ship[0].angle = rw_eight_ways[ip->ship[0].way];
-				ip->ship[0].vangle = 0.0;
-				ip->ship[0].dist = 320.0;
-				ip->ship[0].dest = 200.0;
-				ip->ship[0].vdist = -2.5;
-				ip->ship[0].ticks = 0;
-				ip->ship[0].active = true;
-			}
-			if(ip->level == 14)
-			{
-				ip->ship[1].way = t3f_rand(&ip->rng_state) % 8;
-				ip->ship[1].angle = rw_eight_ways[ip->ship[1].way];
-				ip->ship[1].vangle = 0.0;
-				ip->ship[1].dist = 320.0;
-				ip->ship[1].dest = 160.0;
-				ip->ship[1].vdist = -2.5;
-				ip->ship[1].ticks = 0;
-				ip->ship[1].active = true;
-			}
+			i = rw_generate_threat(ip);
+			rw_reposition_threat(&ip->threat[i], 240);
+			rw_get_next_note(ip);
 		}
-		ip->ticks = 0;
+	}
+	else
+	{
+		if(ip->ticks > rw_level_threat_ticks[ip->level] && t3f_rand(&ip->rng_state) % rw_level_prob_total[ip->level] < rw_level_prob[ip->level])
+		{
+			rw_generate_threat(ip);
+			if(ip->threat_count > 15 && ip->level < 19)
+			{
+				ip->threat_count = 0;
+				al_play_sample(ip->sample[RW_SAMPLE_LEVEL_UP], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+				ip->level++;
+				if(ip->level == 9)
+				{
+					ip->ship[0].way = t3f_rand(&ip->rng_state) % 8;
+					ip->ship[0].angle = rw_eight_ways[ip->ship[0].way];
+					ip->ship[0].vangle = 0.0;
+					ip->ship[0].dist = 320.0;
+					ip->ship[0].dest = 200.0;
+					ip->ship[0].vdist = -2.5;
+					ip->ship[0].ticks = 0;
+					ip->ship[0].active = true;
+				}
+				if(ip->level == 14)
+				{
+					ip->ship[1].way = t3f_rand(&ip->rng_state) % 8;
+					ip->ship[1].angle = rw_eight_ways[ip->ship[1].way];
+					ip->ship[1].vangle = 0.0;
+					ip->ship[1].dist = 320.0;
+					ip->ship[1].dest = 160.0;
+					ip->ship[1].vdist = -2.5;
+					ip->ship[1].ticks = 0;
+					ip->ship[1].active = true;
+				}
+			}
+			ip->ticks = 0;
+		}
 	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 	{
@@ -704,7 +805,7 @@ void rw_state_game_render(RW_INSTANCE * ip)
 	{
 		color = al_map_rgba_f(1.0, 1.0 - (float)ip->damage_time / 20.0, 1.0 - (float)ip->damage_time / 20.0, 1.0);
 	}
-	t3f_draw_bitmap(ip->bitmap[RW_BITMAP_WORLD], color, 640 / 2 - al_get_bitmap_width(ip->bitmap[RW_BITMAP_WORLD]) / 2, 480 / 2 - al_get_bitmap_height(ip->bitmap[RW_BITMAP_WORLD]) / 2, ip->camera_z, 0);
+	t3f_draw_bitmap(ip->bitmap[RW_BITMAP_WORLD], color, 640 / 2 - al_get_bitmap_width(ip->bitmap[RW_BITMAP_WORLD]) / 2, 480 / 2 - al_get_bitmap_height(ip->bitmap[RW_BITMAP_WORLD]) / 2, ip->planet_z - ip->camera_z, 0);
 	for(i = 0; i < 8; i++)
 	{
 		if(ip->shield_generator.shield[i].life > 0)

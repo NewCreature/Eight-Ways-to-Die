@@ -30,6 +30,10 @@ typedef struct
 	T3F_ATLAS * atlas;
 	int game_mode;
 	int control_mode;
+	ALLEGRO_CONFIG * rhythm_config;
+	int rhythm_tick;
+	int beats, current_beat, next_beat;
+	int notes, current_note, next_note;
 
 	/* swipe data */
 	int swipe_state;
@@ -47,6 +51,7 @@ typedef struct
 	int alert_audio_ticks;
 	float camera_z;
 	float camera_target_z;
+	float planet_z;
 	int state;
 	bool music_on;
 	float vertical_scale;

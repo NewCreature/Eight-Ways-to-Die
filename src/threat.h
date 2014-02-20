@@ -8,6 +8,9 @@
 typedef struct
 {
 	
+	float gen_angle;
+	float gen_speed;
+
 	float x;
 	float y;
 	float vx;
