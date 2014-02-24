@@ -344,7 +344,7 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 	if(ip->game_mode == RW_GAME_MODE_RHYTHM)
 	{
 		ip->rhythm_tick++;
-		if(ip->rhythm_tick >= ip->next_beat)
+		if(ip->rhythm_tick >= ip->next_beat - ip->av_delay)
 		{
 			ip->planet_z = -50.0;
 			rw_get_next_beat(ip);
@@ -740,7 +740,7 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 	/* generate enemies */
 	if(ip->game_mode == RW_GAME_MODE_RHYTHM)
 	{
-		if(ip->rhythm_tick >= ip->next_note - 240)
+		if(ip->rhythm_tick >= ip->next_note - 240 - ip->av_delay)
 		{
 			i = rw_generate_threat(ip);
 			rw_reposition_threat(&ip->threat[i], 240);

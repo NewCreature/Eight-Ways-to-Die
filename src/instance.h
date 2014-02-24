@@ -34,6 +34,7 @@ typedef struct
 	int rhythm_tick;
 	int beats, current_beat, next_beat;
 	int notes, current_note, next_note;
+	int av_delay;
 
 	/* swipe data */
 	int swipe_state;
