@@ -66,7 +66,7 @@ static void rw_reposition_threat(RW_THREAT * tp, int ticks)
 	tp->y = 240.0 + sin(tp->gen_angle) * d;
 }
 
-static int rw_generate_threat(RW_INSTANCE * ip)
+static int rw_generate_threat(RW_INSTANCE * ip, int type)
 {
 	int i;
 	int r;
@@ -75,23 +75,35 @@ static int rw_generate_threat(RW_INSTANCE * ip)
 	{
 		if(!ip->threat[i].active)
 		{
-			r = t3f_rand(&ip->rng_state) % 8;
-			ip->threat[i].gen_speed = 1.6 + (float)(t3f_rand(&ip->rng_state) % 100) / 40.0;
-			if(r == 1 && r == 5)
+			switch(type)
 			{
-				ip->threat[i].gen_speed *= ip->vertical_scale;
+				case RW_THREAT_BASIC:
+				{
+					r = t3f_rand(&ip->rng_state) % 8;
+					ip->threat[i].gen_speed = 1.6 + (float)(t3f_rand(&ip->rng_state) % 100) / 40.0;
+					if(r == 1 && r == 5)
+					{
+						ip->threat[i].gen_speed *= ip->vertical_scale;
+					}
+					ip->threat[i].gen_angle = rw_eight_ways[r] + (t3f_drand(&ip->rng_state) - 0.5) / 10.0;
+					ip->threat[i].x = 320.0 + cos(ip->threat[i].gen_angle) * 400.0;
+					ip->threat[i].y = 240.0 + sin(ip->threat[i].gen_angle) * 400.0;
+					ip->threat[i].vx = cos(ip->threat[i].gen_angle) * -ip->threat[i].gen_speed;
+					ip->threat[i].vy = sin(ip->threat[i].gen_angle) * -ip->threat[i].gen_speed;
+					ip->threat[i].angle = 0.0;
+					ip->threat[i].vangle = (float)((float)(t3f_rand(&ip->rng_state) % 100) / 400.0 - 0.125);
+					ip->threat[i].pos = r;
+					ip->threat[i].size = 0;
+					ip->threat[i].type = type;
+					ip->threat[i].active = true;
+					ip->threat_count++;
+					break;
+				}
+				case RW_THREAT_LARGE:
+				{
+					break;
+				}
 			}
-			ip->threat[i].gen_angle = rw_eight_ways[r] + (t3f_drand(&ip->rng_state) - 0.5) / 10.0;
-			ip->threat[i].x = 320.0 + cos(ip->threat[i].gen_angle) * 400.0;
-			ip->threat[i].y = 240.0 + sin(ip->threat[i].gen_angle) * 400.0;
-			ip->threat[i].vx = cos(ip->threat[i].gen_angle) * -ip->threat[i].gen_speed;
-			ip->threat[i].vy = sin(ip->threat[i].gen_angle) * -ip->threat[i].gen_speed;
-			ip->threat[i].angle = 0.0;
-			ip->threat[i].vangle = (float)((float)(t3f_rand(&ip->rng_state) % 100) / 400.0 - 0.125);
-			ip->threat[i].type = r;
-			ip->threat[i].size = 0;
-			ip->threat[i].active = true;
-			ip->threat_count++;
 			return i;
 		}
 	}
@@ -507,20 +519,20 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 			if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < 36.0)
 			{
 				al_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-				if(ip->threat[i].type == 0)
+				if(ip->threat[i].pos == 0)
 				{
 					min_angle = rw_eight_ways[7];
 					max_angle = rw_eight_ways[1];
 				}
-				else if(ip->threat[i].type == 7)
+				else if(ip->threat[i].pos == 7)
 				{
 					min_angle = rw_eight_ways[6];
 					max_angle = rw_eight_ways[0];
 				}
 				else
 				{
-					min_angle = rw_eight_ways[ip->threat[i].type - 1];
-					max_angle = rw_eight_ways[ip->threat[i].type + 1];
+					min_angle = rw_eight_ways[ip->threat[i].pos - 1];
+					max_angle = rw_eight_ways[ip->threat[i].pos + 1];
 				}
 				for(j = 0; j < 8; j++)
 				{
@@ -531,31 +543,31 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 			}
 			else if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < 48.0)
 			{
-				if(ip->shield_generator.shield[ip->threat[i].type].active)
+				if(ip->shield_generator.shield[ip->threat[i].pos].active)
 				{
 					al_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-					if(ip->threat[i].type == 0)
+					if(ip->threat[i].pos == 0)
 					{
 						min_angle = rw_eight_ways[7];
 						max_angle = rw_eight_ways[1];
 					}
-					else if(ip->threat[i].type == 7)
+					else if(ip->threat[i].pos == 7)
 					{
 						min_angle = rw_eight_ways[6];
 						max_angle = rw_eight_ways[0];
 					}
 					else
 					{
-						min_angle = rw_eight_ways[ip->threat[i].type - 1];
-						max_angle = rw_eight_ways[ip->threat[i].type + 1];
+						min_angle = rw_eight_ways[ip->threat[i].pos - 1];
+						max_angle = rw_eight_ways[ip->threat[i].pos + 1];
 					}
 					for(j = 0; j < 5; j++)
 					{
 						rw_generate_particle(ip, ip->threat[i].x, ip->threat[i].y, min_angle, max_angle);
 					}
 					ip->threat[i].active = 0;
-					ip->shield_generator.shield[ip->threat[i].type].active = 0;
-					ip->shield_generator.shield[ip->threat[i].type].life = RW_SHIELD_MAX_LIFE;
+					ip->shield_generator.shield[ip->threat[i].pos].active = 0;
+					ip->shield_generator.shield[ip->threat[i].pos].life = RW_SHIELD_MAX_LIFE;
 				}
 			}
 		}
@@ -570,20 +582,20 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 			if(t3f_distance(320.0, 240.0, ip->shot[i].x, ip->shot[i].y) < 36.0)
 			{
 				al_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-				if(ip->shot[i].type == 0)
+				if(ip->shot[i].pos == 0)
 				{
 					min_angle = rw_eight_ways[7];
 					max_angle = rw_eight_ways[1];
 				}
-				else if(ip->shot[i].type == 7)
+				else if(ip->shot[i].pos == 7)
 				{
 					min_angle = rw_eight_ways[6];
 					max_angle = rw_eight_ways[0];
 				}
 				else
 				{
-					min_angle = rw_eight_ways[ip->shot[i].type - 1];
-					max_angle = rw_eight_ways[ip->shot[i].type + 1];
+					min_angle = rw_eight_ways[ip->shot[i].pos - 1];
+					max_angle = rw_eight_ways[ip->shot[i].pos + 1];
 				}
 				for(j = 0; j < 5; j++)
 				{
@@ -594,31 +606,31 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 			}
 			else if(t3f_distance(320.0, 240.0, ip->shot[i].x, ip->shot[i].y) < 48.0)
 			{
-				if(ip->shield_generator.shield[ip->shot[i].type].active)
+				if(ip->shield_generator.shield[ip->shot[i].pos].active)
 				{
 					al_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-					if(ip->shot[i].type == 0)
+					if(ip->shot[i].pos == 0)
 					{
 						min_angle = rw_eight_ways[7];
 						max_angle = rw_eight_ways[1];
 					}
-					else if(ip->shot[i].type == 7)
+					else if(ip->shot[i].pos == 7)
 					{
 						min_angle = rw_eight_ways[6];
 						max_angle = rw_eight_ways[0];
 					}
 					else
 					{
-						min_angle = rw_eight_ways[ip->shot[i].type - 1];
-						max_angle = rw_eight_ways[ip->shot[i].type + 1];
+						min_angle = rw_eight_ways[ip->shot[i].pos - 1];
+						max_angle = rw_eight_ways[ip->shot[i].pos + 1];
 					}
 					for(j = 0; j < 3; j++)
 					{
 						rw_generate_particle(ip, ip->shot[i].x, ip->shot[i].y, min_angle, max_angle);
 					}
 					ip->shot[i].active = 0;
-					ip->shield_generator.shield[ip->shot[i].type].active = 0;
-					ip->shield_generator.shield[ip->shot[i].type].life = RW_SHIELD_MAX_LIFE;
+					ip->shield_generator.shield[ip->shot[i].pos].active = 0;
+					ip->shield_generator.shield[ip->shot[i].pos].life = RW_SHIELD_MAX_LIFE;
 //					ip->score += 25;
 				}
 			}
@@ -691,7 +703,7 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 								ip->shot[j].y = 240.0 + sin(ip->ship[i].angle) * ip->ship[i].dist;
 								ip->shot[j].vx = cos(ip->ship[i].angle) * -3.0;
 								ip->shot[j].vy = sin(ip->ship[i].angle) * -3.0;
-								ip->shot[j].type = ip->ship[i].way;
+								ip->shot[j].pos = ip->ship[i].way;
 								ip->shot[j].active = true;
 								break;
 							}
@@ -742,7 +754,7 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 	{
 		if(ip->rhythm_tick >= ip->next_note - 240 - ip->av_delay)
 		{
-			i = rw_generate_threat(ip);
+			i = rw_generate_threat(ip, RW_THREAT_BASIC);
 			rw_reposition_threat(&ip->threat[i], 240);
 			rw_get_next_note(ip);
 		}
@@ -751,7 +763,7 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 	{
 		if(ip->ticks > rw_level_threat_ticks[ip->level] && t3f_rand(&ip->rng_state) % rw_level_prob_total[ip->level] < rw_level_prob[ip->level])
 		{
-			rw_generate_threat(ip);
+			rw_generate_threat(ip, RW_THREAT_BASIC);
 			if(ip->threat_count > 15 && ip->level < 19)
 			{
 				ip->threat_count = 0;
@@ -827,7 +839,18 @@ void rw_state_game_render(RW_INSTANCE * ip)
 	{
 		if(ip->threat[i].active)
 		{
-			t3f_draw_rotated_bitmap(ip->bitmap[RW_BITMAP_THREAT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), al_get_bitmap_width(ip->bitmap[RW_BITMAP_THREAT]) / 2, al_get_bitmap_height(ip->bitmap[RW_BITMAP_THREAT]) / 2, ip->threat[i].x, ip->threat[i].y, ip->camera_z, ip->threat[i].angle, 0);
+			switch(ip->threat[i].type)
+			{
+				case RW_THREAT_BASIC:
+				{
+					t3f_draw_rotated_bitmap(ip->bitmap[RW_BITMAP_THREAT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), al_get_bitmap_width(ip->bitmap[RW_BITMAP_THREAT]) / 2, al_get_bitmap_height(ip->bitmap[RW_BITMAP_THREAT]) / 2, ip->threat[i].x, ip->threat[i].y, ip->camera_z, ip->threat[i].angle, 0);
+					break;
+				}
+				case RW_THREAT_LARGE:
+				{
+					break;
+				}
+			}
 		}
 	}
 	for(i = 0; i < RW_MAX_SHOTS; i++)

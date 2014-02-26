@@ -4,6 +4,7 @@
 #define RW_MAX_THREATS  128
 
 #define RW_THREAT_BASIC   0
+#define RW_THREAT_LARGE   1
 
 typedef struct
 {
@@ -20,6 +21,7 @@ typedef struct
 	
 	bool active;
 	int type;
+	int pos;
 	int size;
 	
 } RW_THREAT;

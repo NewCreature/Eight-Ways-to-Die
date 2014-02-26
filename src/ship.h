@@ -30,7 +30,7 @@ typedef struct
 	float vy;
 	
 	bool active;
-	int type;
+	int pos;
 	
 } RW_SHOT;
 
