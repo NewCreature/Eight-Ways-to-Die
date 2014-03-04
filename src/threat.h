@@ -5,11 +5,13 @@
 
 #define RW_THREAT_BASIC   0
 #define RW_THREAT_LARGE   1
+#define RW_THREAT_PIECE   2
 
 typedef struct
 {
 	
 	float gen_angle;
+	float gen_vangle;
 	float gen_speed;
 
 	float x;
@@ -18,6 +20,8 @@ typedef struct
 	float vy;
 	float angle;
 	float vangle;
+	float d;
+	float vd;
 	
 	bool active;
 	int type;
