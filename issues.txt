@@ -25,3 +25,11 @@ Version 1.2
 	   
 	   [ ]Introduce large threat at level 2. Only generate large every so often.
 	      Later levels will generate more large threats.
+	
+	[ ]Add multi-touch support. Store swipe data for each possible touch so user
+	   can play with both hands on mobile.
+	
+	[ ]Add sound for when ship fires shot.
+	
+	[ ]Use different graphic for large threat and shrapnel to make it easier to
+	   interpret what is happening on the screen when it is full of threats.
