@@ -1,6 +1,7 @@
 #include "instance.h"
 
 #include "t3f/draw.h"
+#include "t3f/sound.h"
 
 #include "control_keyboard.h"
 #include "control_hotspot.h"
@@ -67,7 +68,7 @@ void rw_state_title_logic(RW_INSTANCE * ip)
 	}
 	else if(key == '2')
 	{
-		al_play_sample(ip->sample[RW_SAMPLE_GAME_START], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+		t3f_play_sample(ip->sample[RW_SAMPLE_GAME_START], 0.5, 0.0, 1.0);
 		ip->intro_planet_vangle = ip->intro_planet_angle / (ip->intro_planet_z / 10.0);
 		ip->game_mode = RW_GAME_MODE_NORMAL;
 		rw_initialize_game(ip);

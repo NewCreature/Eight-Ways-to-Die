@@ -1,5 +1,6 @@
 #include "t3f/t3f.h"
 #include "t3f/draw.h"
+#include "t3f/sound.h"
 
 #include "instance.h"
 
@@ -212,7 +213,7 @@ static void rw_destroy_everything(RW_INSTANCE * ip)
 	}
 	if(c)
 	{
-		al_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+		t3f_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, 0.0, 1.0);
 	}
 }
 
@@ -410,56 +411,56 @@ static void rw_state_game_control_logic(RW_INSTANCE * ip)
 		}
 		case '7':
 		{
-			al_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.25, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, -0.25, 1.0);
 			ip->shield_generator.shield[0].life = RW_SHIELD_MAX_LIFE;
 			ip->shield_generator.shield[0].active = true;
 			break;
 		}
 		case '8':
 		{
-			al_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.0, 1.0);
 			ip->shield_generator.shield[1].life = RW_SHIELD_MAX_LIFE;
 			ip->shield_generator.shield[1].active = true;
 			break;
 		}
 		case '9':
 		{
-			al_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.75, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.25, 1.0);
 			ip->shield_generator.shield[2].life = RW_SHIELD_MAX_LIFE;
 			ip->shield_generator.shield[2].active = true;
 			break;
 		}
 		case '6':
 		{
-			al_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.85, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.5, 1.0);
 			ip->shield_generator.shield[3].life = RW_SHIELD_MAX_LIFE;
 			ip->shield_generator.shield[3].active = true;
 			break;
 		}
 		case '3':
 		{
-			al_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.75, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.25, 1.0);
 			ip->shield_generator.shield[4].life = RW_SHIELD_MAX_LIFE;
 			ip->shield_generator.shield[4].active = true;
 			break;
 		}
 		case '2':
 		{
-			al_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.0, 1.0);
 			ip->shield_generator.shield[5].life = RW_SHIELD_MAX_LIFE;
 			ip->shield_generator.shield[5].active = true;
 			break;
 		}
 		case '1':
 		{
-			al_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.25, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, -0.25, 1.0);
 			ip->shield_generator.shield[6].life = RW_SHIELD_MAX_LIFE;
 			ip->shield_generator.shield[6].active = true;
 			break;
 		}
 		case '4':
 		{
-			al_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.15, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, -0.5, 1.0);
 			ip->shield_generator.shield[7].life = RW_SHIELD_MAX_LIFE;
 			ip->shield_generator.shield[7].active = true;
 			break;
@@ -536,7 +537,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 				ip->threat[i].angle += ip->threat[i].vangle;
 				if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < 36.0)
 				{
-					al_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+					t3f_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, 0.0, 1.0);
 					if(ip->threat[i].pos == 0)
 					{
 						min_angle = rw_eight_ways[7];
@@ -563,7 +564,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 				{
 					if(ip->shield_generator.shield[ip->threat[i].pos].active)
 					{
-						al_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+						t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.0, 1.0);
 						if(ip->threat[i].pos == 0)
 						{
 							min_angle = rw_eight_ways[7];
@@ -597,7 +598,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 				ip->threat[i].angle += ip->threat[i].vangle;
 				if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < 44.0)
 				{
-					al_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+					t3f_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, 0.0, 1.0);
 					if(ip->threat[i].pos == 0)
 					{
 						min_angle = rw_eight_ways[7];
@@ -625,7 +626,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 				{
 					if(ip->shield_generator.shield[ip->threat[i].pos].active)
 					{
-						al_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+						t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.0, 1.0);
 						if(ip->threat[i].pos == 0)
 						{
 							min_angle = rw_eight_ways[7];
@@ -663,7 +664,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 				ip->threat[i].angle += ip->threat[i].vangle;
 				if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < 36.0)
 				{
-					al_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+					t3f_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, 0.0, 1.0);
 					if(ip->threat[i].pos == 0)
 					{
 						min_angle = rw_eight_ways[7];
@@ -690,7 +691,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 				{
 					if(ip->shield_generator.shield[ip->threat[i].pos].active && ip->threat[i].vd <= 0.0)
 					{
-						al_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+						t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.0, 1.0);
 						if(ip->threat[i].pos == 0)
 						{
 							min_angle = rw_eight_ways[7];
@@ -732,7 +733,7 @@ static void rw_state_game_shot_logic(RW_INSTANCE * ip, int i)
 		ip->shot[i].y += ip->shot[i].vy;
 		if(t3f_distance(320.0, 240.0, ip->shot[i].x, ip->shot[i].y) < 36.0)
 		{
-			al_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+			t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.0, 1.0);
 			if(ip->shot[i].pos == 0)
 			{
 				min_angle = rw_eight_ways[7];
@@ -759,7 +760,7 @@ static void rw_state_game_shot_logic(RW_INSTANCE * ip, int i)
 		{
 			if(ip->shield_generator.shield[ip->shot[i].pos].active)
 			{
-				al_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+				t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.0, 1.0);
 				if(ip->shot[i].pos == 0)
 				{
 					min_angle = rw_eight_ways[7];
@@ -960,7 +961,7 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 		}
 		if(ip->alert_audio_ticks == 0)
 		{
-			al_play_sample(ip->sample[RW_SAMPLE_ALERT], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+			t3f_play_sample(ip->sample[RW_SAMPLE_ALERT], 0.5, 0.0, 1.0);
 		}
 		ip->alert_audio_ticks++;
 		if(ip->alert_audio_ticks >= 60)
@@ -990,7 +991,7 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 		ip->high_score = ip->score;
 		if(!ip->new_high_score)
 		{
-			al_play_sample(ip->sample[RW_SAMPLE_HIGH_SCORE], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+			t3f_play_sample(ip->sample[RW_SAMPLE_HIGH_SCORE], 0.5, 0.0, 1.0);
 			ip->new_high_score = true;
 		}
 	}
@@ -1020,7 +1021,7 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 			if(ip->threat_count > 15 && ip->level < 19)
 			{
 				ip->threat_count = 0;
-				al_play_sample(ip->sample[RW_SAMPLE_LEVEL_UP], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+				t3f_play_sample(ip->sample[RW_SAMPLE_LEVEL_UP], 0.5, 0.0, 1.0);
 				ip->level++;
 				if(ip->level == 9)
 				{
