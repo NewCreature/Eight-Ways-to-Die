@@ -260,7 +260,10 @@ void rw_initialize_game(RW_INSTANCE * ip)
 	ip->camera_target_z = 0.0;
 	ip->planet_z = 0.0;
 	ip->alert_audio_ticks = 0;
-	ip->swipe_state = RW_SWIPE_INACTIVE;
+	for(i = 0; i < T3F_MAX_TOUCHES; i++)
+	{
+		ip->swipe[i].state = RW_SWIPE_INACTIVE;
+	}
 	if(ip->music_on)
 	{
 		t3f_play_music("data/bgm.it");
@@ -269,6 +272,8 @@ void rw_initialize_game(RW_INSTANCE * ip)
 
 static void rw_deal_damage(RW_INSTANCE * ip)
 {
+	int i;
+
 //	ip->damage++;
 	ip->damage_time = 20;
 	if(ip->damage > 4)
@@ -277,7 +282,10 @@ static void rw_deal_damage(RW_INSTANCE * ip)
 		ip->state = RW_STATE_GAME_OVER;
 		ip->intro_planet_z = ip->camera_z;
 		ip->alert_ticks = 0;
-		ip->swipe_state = RW_SWIPE_INACTIVE;
+		for(i = 0; i < T3F_MAX_TOUCHES; i++)
+		{
+			ip->swipe[i].state = RW_SWIPE_INACTIVE;
+		}
 	}
 }
 

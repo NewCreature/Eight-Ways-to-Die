@@ -1,49 +1,43 @@
 #include "instance.h"
 
-/* read swipe controls and simulate keys, returns character */
-int rw_swipe_logic(RW_INSTANCE * ip)
+static int rw_single_swipe_logic(RW_INSTANCE * ip, int i)
 {
-	int i;
 	double angle;
 	double slice;
 	double offset;
-	
-	switch(ip->swipe_state)
+
+	switch(ip->swipe[i].state)
 	{
 		case RW_SWIPE_INACTIVE:
 		{
-			for(i = 0; i < T3F_MAX_TOUCHES; i++)
+			if(t3f_touch[i].active)
 			{
-				if(t3f_touch[i].active)
-				{
-					ip->swipe_touch = i;
-					ip->swipe_x = t3f_touch[i].x;
-					ip->swipe_y = t3f_touch[i].y;
-					ip->swipe_state = RW_SWIPE_ACTIVE;
-					return 0;
-				}
+				ip->swipe[i].x = t3f_touch[i].x;
+				ip->swipe[i].y = t3f_touch[i].y;
+				ip->swipe[i].state = RW_SWIPE_ACTIVE;
+				return 0;
 			}
 			break;
 		}
 		case RW_SWIPE_ACTIVE:
 		{
-			if(!t3f_touch[ip->swipe_touch].active)
+			if(!t3f_touch[i].active)
 			{
-				ip->swipe_state = RW_SWIPE_INACTIVE;
+				ip->swipe[i].state = RW_SWIPE_INACTIVE;
 				return 0;
 			}
 			else
 			{
-				if(t3f_distance(t3f_touch[ip->swipe_touch].x, t3f_touch[ip->swipe_touch].y, ip->swipe_x, ip->swipe_y) >= 32.0)
+				if(t3f_distance(t3f_touch[i].x, t3f_touch[i].y, ip->swipe[i].x, ip->swipe[i].y) >= 32.0)
 				{
 					slice = (ALLEGRO_PI * 2.0) / 8.0;
 					offset = slice / 2.0;
-					angle = atan2(t3f_touch[ip->swipe_touch].y - ip->swipe_y, t3f_touch[ip->swipe_touch].x - ip->swipe_x) + ALLEGRO_PI;
+					angle = atan2(t3f_touch[i].y - ip->swipe[i].y, t3f_touch[i].x - ip->swipe[i].x) + ALLEGRO_PI;
 					if(angle + offset > ALLEGRO_PI * 2.0)
 					{
 						angle -= ALLEGRO_PI * 2.0;
 					}
-					ip->swipe_state = RW_SWIPE_USED;
+					ip->swipe[i].state = RW_SWIPE_USED;
 					if(angle + offset >= slice * 7.0)
 					{
 						return '1';
@@ -82,9 +76,9 @@ int rw_swipe_logic(RW_INSTANCE * ip)
 		}
 		case RW_SWIPE_USED:
 		{
-			if(!t3f_touch[ip->swipe_touch].active)
+			if(!t3f_touch[i].active)
 			{
-				ip->swipe_state = RW_SWIPE_INACTIVE;
+				ip->swipe[i].state = RW_SWIPE_INACTIVE;
 			}
 			break;
 		}
@@ -92,11 +86,32 @@ int rw_swipe_logic(RW_INSTANCE * ip)
 	return 0;
 }
 
+/* read swipe controls and simulate keys, returns character */
+int rw_swipe_logic(RW_INSTANCE * ip)
+{
+	int i, key;
+	
+	for(i = 0; i < T3F_MAX_TOUCHES; i++)
+	{
+		key = rw_single_swipe_logic(ip, i);
+		if(key != 0)
+		{
+			break;
+		}
+	}
+	return key;
+}
+
 void rw_render_swipe(RW_INSTANCE * ip)
 {
-	if(ip->swipe_state == RW_SWIPE_ACTIVE)
+	int i;
+	
+	for(i = 0; i < T3F_MAX_TOUCHES; i++)
 	{
-		al_draw_tinted_bitmap(ip->bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), ip->swipe_x - 4.0, ip->swipe_y - 4.0, 0);
-		al_draw_tinted_bitmap(ip->bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), t3f_touch[ip->swipe_touch].x - 4.0, t3f_touch[ip->swipe_touch].y - 4.0, 0);
+		if(ip->swipe[i].state == RW_SWIPE_ACTIVE)
+		{
+			al_draw_tinted_bitmap(ip->bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), ip->swipe[i].x - 4.0, ip->swipe[i].y - 4.0, 0);
+			al_draw_tinted_bitmap(ip->bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), t3f_touch[i].x - 4.0, t3f_touch[i].y - 4.0, 0);
+		}
 	}
 }

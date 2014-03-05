@@ -32,8 +32,10 @@ RW_INSTANCE * rw_create_instance(void)
 		ip->atlas = NULL;
 		ip->control_mode = RW_CONTROL_MODE_SWIPE;
 
-		/* swipe data */
-		ip->swipe_state = RW_SWIPE_INACTIVE;
+		for(i = 0; i < T3F_MAX_TOUCHES; i++)
+		{
+			ip->swipe[i].state = RW_SWIPE_INACTIVE;
+		}
 		ip->score = 0;
 		ip->high_score = 1800;
 		ip->new_high_score = false;

@@ -10,6 +10,15 @@
 
 typedef struct
 {
+
+	int state;
+	float x;
+	float y;
+
+} RW_SWIPE_DATA;
+
+typedef struct
+{
 	/* intro data */
 	float intro_z;
 	float intro_planet_z;
@@ -30,11 +39,7 @@ typedef struct
 	T3F_ATLAS * atlas;
 	int control_mode;
 
-	/* swipe data */
-	int swipe_state;
-	int swipe_touch;
-	int swipe_x;
-	int swipe_y;
+	RW_SWIPE_DATA swipe[T3F_MAX_TOUCHES];
 	int score;
 	int high_score;
 	bool new_high_score;
