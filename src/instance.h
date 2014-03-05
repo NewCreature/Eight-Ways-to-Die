@@ -28,13 +28,7 @@ typedef struct
 	ALLEGRO_FONT * font;
 	ALLEGRO_SAMPLE * sample[RW_MAX_SAMPLES];
 	T3F_ATLAS * atlas;
-	int game_mode;
 	int control_mode;
-	ALLEGRO_CONFIG * rhythm_config;
-	int rhythm_tick;
-	int beats, current_beat, next_beat;
-	int notes, current_note, next_note;
-	int av_delay;
 
 	/* swipe data */
 	int swipe_state;

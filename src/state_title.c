@@ -70,7 +70,6 @@ void rw_state_title_logic(RW_INSTANCE * ip)
 	{
 		t3f_play_sample(ip->sample[RW_SAMPLE_GAME_START], 0.5, 0.0, 1.0);
 		ip->intro_planet_vangle = ip->intro_planet_angle / (ip->intro_planet_z / 10.0);
-		ip->game_mode = RW_GAME_MODE_NORMAL;
 		rw_initialize_game(ip);
 		ip->state = RW_STATE_GAME_IN;
 	}

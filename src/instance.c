@@ -30,10 +30,7 @@ RW_INSTANCE * rw_create_instance(void)
 			ip->sample[i] = NULL;
 		}
 		ip->atlas = NULL;
-		ip->game_mode = RW_GAME_MODE_NORMAL;
 		ip->control_mode = RW_CONTROL_MODE_SWIPE;
-		ip->rhythm_config = NULL;
-		ip->av_delay = 15;
 
 		/* swipe data */
 		ip->swipe_state = RW_SWIPE_INACTIVE;
