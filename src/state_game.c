@@ -23,6 +23,18 @@ static float rw_eight_ways[8] =
 	((2.0 * ALLEGRO_PI) / 8.0) * 12.0,
 };
 
+static float rw_pan_eight_ways[8] = 
+{
+	-0.25,
+	0.0,
+	0.25,
+	0.5,
+	0.25,
+	0.0,
+	-0.25,
+	-0.5
+};
+
 /* level variables */
 static int rw_level_threat_ticks[RW_MAX_LEVELS] =
 {
@@ -411,56 +423,56 @@ static void rw_state_game_control_logic(RW_INSTANCE * ip)
 		}
 		case '7':
 		{
-			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, -0.25, 1.0);
+			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, rw_pan_eight_ways[0], 1.0);
 			ip->shield_generator.shield[0].life = RW_SHIELD_MAX_LIFE;
 			ip->shield_generator.shield[0].active = true;
 			break;
 		}
 		case '8':
 		{
-			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.0, 1.0);
+			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, rw_pan_eight_ways[1], 1.0);
 			ip->shield_generator.shield[1].life = RW_SHIELD_MAX_LIFE;
 			ip->shield_generator.shield[1].active = true;
 			break;
 		}
 		case '9':
 		{
-			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.25, 1.0);
+			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, rw_pan_eight_ways[2], 1.0);
 			ip->shield_generator.shield[2].life = RW_SHIELD_MAX_LIFE;
 			ip->shield_generator.shield[2].active = true;
 			break;
 		}
 		case '6':
 		{
-			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.5, 1.0);
+			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, rw_pan_eight_ways[3], 1.0);
 			ip->shield_generator.shield[3].life = RW_SHIELD_MAX_LIFE;
 			ip->shield_generator.shield[3].active = true;
 			break;
 		}
 		case '3':
 		{
-			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.25, 1.0);
+			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, rw_pan_eight_ways[4], 1.0);
 			ip->shield_generator.shield[4].life = RW_SHIELD_MAX_LIFE;
 			ip->shield_generator.shield[4].active = true;
 			break;
 		}
 		case '2':
 		{
-			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, 0.0, 1.0);
+			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, rw_pan_eight_ways[5], 1.0);
 			ip->shield_generator.shield[5].life = RW_SHIELD_MAX_LIFE;
 			ip->shield_generator.shield[5].active = true;
 			break;
 		}
 		case '1':
 		{
-			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, -0.25, 1.0);
+			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, rw_pan_eight_ways[6], 1.0);
 			ip->shield_generator.shield[6].life = RW_SHIELD_MAX_LIFE;
 			ip->shield_generator.shield[6].active = true;
 			break;
 		}
 		case '4':
 		{
-			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, -0.5, 1.0);
+			t3f_play_sample(ip->sample[RW_SAMPLE_SHIELD], 0.5, rw_pan_eight_ways[7], 1.0);
 			ip->shield_generator.shield[7].life = RW_SHIELD_MAX_LIFE;
 			ip->shield_generator.shield[7].active = true;
 			break;
@@ -537,7 +549,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 				ip->threat[i].angle += ip->threat[i].vangle;
 				if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < 36.0)
 				{
-					t3f_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, 0.0, 1.0);
+					t3f_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, rw_pan_eight_ways[ip->threat[i].pos], 1.0);
 					if(ip->threat[i].pos == 0)
 					{
 						min_angle = rw_eight_ways[7];
@@ -564,7 +576,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 				{
 					if(ip->shield_generator.shield[ip->threat[i].pos].active)
 					{
-						t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.0, 1.0);
+						t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, rw_pan_eight_ways[ip->threat[i].pos], 1.0);
 						if(ip->threat[i].pos == 0)
 						{
 							min_angle = rw_eight_ways[7];
@@ -598,7 +610,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 				ip->threat[i].angle += ip->threat[i].vangle;
 				if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < 44.0)
 				{
-					t3f_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, 0.0, 1.0);
+					t3f_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, rw_pan_eight_ways[ip->threat[i].pos], 1.0);
 					if(ip->threat[i].pos == 0)
 					{
 						min_angle = rw_eight_ways[7];
@@ -626,7 +638,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 				{
 					if(ip->shield_generator.shield[ip->threat[i].pos].active)
 					{
-						t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.0, 1.0);
+						t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, rw_pan_eight_ways[ip->threat[i].pos], 1.0);
 						if(ip->threat[i].pos == 0)
 						{
 							min_angle = rw_eight_ways[7];
@@ -664,7 +676,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 				ip->threat[i].angle += ip->threat[i].vangle;
 				if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < 36.0)
 				{
-					t3f_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, 0.0, 1.0);
+					t3f_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, rw_pan_eight_ways[ip->threat[i].pos], 1.0);
 					if(ip->threat[i].pos == 0)
 					{
 						min_angle = rw_eight_ways[7];
@@ -691,7 +703,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 				{
 					if(ip->shield_generator.shield[ip->threat[i].pos].active && ip->threat[i].vd <= 0.0)
 					{
-						t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.0, 1.0);
+						t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, rw_pan_eight_ways[ip->threat[i].pos], 1.0);
 						if(ip->threat[i].pos == 0)
 						{
 							min_angle = rw_eight_ways[7];
@@ -733,7 +745,7 @@ static void rw_state_game_shot_logic(RW_INSTANCE * ip, int i)
 		ip->shot[i].y += ip->shot[i].vy;
 		if(t3f_distance(320.0, 240.0, ip->shot[i].x, ip->shot[i].y) < 36.0)
 		{
-			t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.0, 1.0);
+			t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, rw_pan_eight_ways[ip->shot[i].pos], 1.0);
 			if(ip->shot[i].pos == 0)
 			{
 				min_angle = rw_eight_ways[7];
@@ -760,7 +772,7 @@ static void rw_state_game_shot_logic(RW_INSTANCE * ip, int i)
 		{
 			if(ip->shield_generator.shield[ip->shot[i].pos].active)
 			{
-				t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, 0.0, 1.0);
+				t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, rw_pan_eight_ways[ip->shot[i].pos], 1.0);
 				if(ip->shot[i].pos == 0)
 				{
 					min_angle = rw_eight_ways[7];
