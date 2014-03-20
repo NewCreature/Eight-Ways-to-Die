@@ -23,6 +23,7 @@ static float rw_eight_ways[8] =
 	((2.0 * ALLEGRO_PI) / 8.0) * 12.0,
 };
 
+/* sound panning info */
 static float rw_pan_eight_ways[8] = 
 {
 	-0.25,
