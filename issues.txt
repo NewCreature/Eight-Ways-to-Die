@@ -33,3 +33,6 @@ Version 1.2
 	
 	[ ]Use different graphic for large threat and shrapnel to make it easier to
 	   interpret what is happening on the screen when it is full of threats.
+	   
+	[ ]Fix game-to-title transition. The earth position jumps instead of moving
+	   smoothly to the title screen.
