@@ -13,11 +13,11 @@
 /* the eight ways from which to die */
 static float rw_eight_ways[8] = 
 {
-	((2.0 * ALLEGRO_PI) / 8.0) * 5.0,
-	((2.0 * ALLEGRO_PI) / 8.0) * 6.0,
-	((2.0 * ALLEGRO_PI) / 8.0) * 7.0,
-	((2.0 * ALLEGRO_PI) / 8.0) * 8.0,
-	((2.0 * ALLEGRO_PI) / 8.0) * 9.0,
+	 ((2.0 * ALLEGRO_PI) / 8.0) * 5.0,
+	 ((2.0 * ALLEGRO_PI) / 8.0) * 6.0,
+	 ((2.0 * ALLEGRO_PI) / 8.0) * 7.0,
+	 ((2.0 * ALLEGRO_PI) / 8.0) * 8.0,
+	 ((2.0 * ALLEGRO_PI) / 8.0) * 9.0,
 	((2.0 * ALLEGRO_PI) / 8.0) * 10.0,
 	((2.0 * ALLEGRO_PI) / 8.0) * 11.0,
 	((2.0 * ALLEGRO_PI) / 8.0) * 12.0,
@@ -27,38 +27,46 @@ static float rw_eight_ways[8] =
 static float rw_pan_eight_ways[8] = 
 {
 	-0.25,
-	0.0,
-	0.25,
-	0.5,
-	0.25,
-	0.0,
+	  0.0,
+	 0.25,
+	  0.5,
+	 0.25,
+	  0.0,
 	-0.25,
-	-0.5
+	 -0.5
 };
 
 /* level variables */
-static int rw_level_threat_ticks[RW_MAX_LEVELS] =
+static int rw_threat_wait[RW_MAX_LEVELS] =
 {
-	60, 58, 56, 54, 52,
-	50, 48, 46, 44, 42,
-	40, 38, 36, 34, 32,
-	30, 28, 26, 24, 20
+	90, 87, 84, 81, 78,
+	75, 72, 69, 66, 63,
+	60, 57, 54, 51, 48,
+	45, 42, 39, 36, 33
 };
 
-static int rw_level_prob_total[RW_MAX_LEVELS] =
+static int rw_threat_variance[RW_MAX_LEVELS] =
 {
-	100, 100, 100, 100, 100,
-	100, 100, 100, 100, 100,
-	100, 100, 100, 100, 100,
-	100, 100, 100, 100, 100
+	60, 60, 60, 60, 60,
+	60, 60, 60, 60, 60,
+	60, 60, 60, 60, 60,
+	60, 60, 60, 60, 60
 };
 
-static int rw_level_prob[RW_MAX_LEVELS] =
+static float rw_level_threat_base_speed[RW_MAX_LEVELS] = 
 {
-	50, 51, 52, 53, 54,
-	55, 56, 57, 58, 59,
-	60, 61, 62, 63, 64,
-	65, 66, 67, 68, 70
+	  1.6,  1.625,   1.65,  1.675,    1.7,
+	1.725,   1.75,  1.775,    1.8,  1.825,
+	 1.85,  1.875,    1.9,  1.925,   1.95,
+	1.975,    2.0,  2.025,   2.05,  2.075
+};
+
+static float rw_level_threat_speed[RW_MAX_LEVELS] = 
+{
+	0.6, 0.7, 0.8, 0.9, 1.0,
+	1.1, 1.2, 1.3, 1.4, 1.5,
+	1.6, 1.7, 1.8, 1.9, 2.0,
+	2.1, 2.2, 2.3, 2.4, 2.5
 };
 
 static float rw_level_camera_z[RW_MAX_LEVELS] =
@@ -67,6 +75,14 @@ static float rw_level_camera_z[RW_MAX_LEVELS] =
 	  50.0,   60.0,   70.0,   80.0,   90.0,
 	 100.0,  110.0,  120.0,  130.0,  140.0,
 	 150.0,  160.0,  170.0,  180.0,  190.0
+};
+
+static int rw_big_threat_wait[RW_MAX_LEVELS] =
+{
+	30, 20, 20, 20, 20,
+	18, 18, 16, 16, 14,
+	14, 12, 12, 11, 11,
+	10, 10,  9,  8,  7
 };
 
 static int rw_get_new_threat(RW_INSTANCE * ip)
@@ -98,7 +114,8 @@ static int rw_generate_threat(RW_INSTANCE * ip, int type)
 				case RW_THREAT_BASIC:
 				{
 					r = t3f_rand(&ip->rng_state) % 8;
-					ip->threat[i].gen_speed = 1.6 + (float)(t3f_rand(&ip->rng_state) % 100) / 40.0;
+//					ip->threat[i].gen_speed = 1.6 + (float)(t3f_rand(&ip->rng_state) % 100) / 40.0;
+					ip->threat[i].gen_speed = rw_level_threat_base_speed[ip->level] + t3f_drand(&ip->rng_state) * rw_level_threat_speed[ip->level];
 					if(r == 1 && r == 5)
 					{
 						ip->threat[i].gen_speed *= ip->vertical_scale;
@@ -114,13 +131,12 @@ static int rw_generate_threat(RW_INSTANCE * ip, int type)
 					ip->threat[i].size = 0;
 					ip->threat[i].type = type;
 					ip->threat[i].active = true;
-					ip->threat_count++;
 					break;
 				}
 				case RW_THREAT_LARGE:
 				{
 					r = t3f_rand(&ip->rng_state) % 8;
-					ip->threat[i].gen_speed = 1.6 + (float)(t3f_rand(&ip->rng_state) % 100) / 40.0;
+					ip->threat[i].gen_speed = rw_level_threat_base_speed[ip->level] + t3f_drand(&ip->rng_state) * rw_level_threat_speed[ip->level];
 					if(r == 1 && r == 5)
 					{
 						ip->threat[i].gen_speed *= ip->vertical_scale;
@@ -136,7 +152,6 @@ static int rw_generate_threat(RW_INSTANCE * ip, int type)
 					ip->threat[i].size = 0;
 					ip->threat[i].type = type;
 					ip->threat[i].active = true;
-					ip->threat_count++;
 					break;
 				}
 			}
@@ -252,7 +267,6 @@ void rw_initialize_game(RW_INSTANCE * ip)
 	
 	ip->score = 0;
 	ip->new_high_score = false;
-	ip->threat_count = 0;
 	ip->level = 0;
 	ip->damage = 0;
 	ip->damage_time = 0;
@@ -261,6 +275,8 @@ void rw_initialize_game(RW_INSTANCE * ip)
 	ip->camera_target_z = 0.0;
 	ip->planet_z = 0.0;
 	ip->alert_audio_ticks = 0;
+	ip->threat_wait = rw_threat_wait[ip->level] + (t3f_rand(&ip->rng_state) % rw_threat_variance[ip->level]) - 30;
+	ip->big_threat_wait = rw_big_threat_wait[ip->level] + t3f_rand(&ip->rng_state) % 5;
 	for(i = 0; i < T3F_MAX_TOUCHES; i++)
 	{
 		ip->swipe[i].state = RW_SWIPE_INACTIVE;
@@ -275,7 +291,7 @@ static void rw_deal_damage(RW_INSTANCE * ip)
 {
 	int i;
 
-//	ip->damage++;
+	ip->damage++;
 	ip->damage_time = 20;
 	if(ip->damage > 4)
 	{
@@ -418,8 +434,11 @@ static void rw_state_game_control_logic(RW_INSTANCE * ip)
 
 static void rw_break_large_threat(RW_INSTANCE * ip, int i)
 {
-	int j, r;
+	int j, r, tr;
+	double vd[2] = {4.0, 3.7};
+	double va[2] = {0.005, 0.006};
 	
+	tr = t3f_rand(&ip->rng_state) % 2;
 	j = rw_get_new_threat(ip);
 	if(j >= 0)
 	{
@@ -430,9 +449,9 @@ static void rw_break_large_threat(RW_INSTANCE * ip, int i)
 		}
 		ip->threat[j].gen_speed = -1.6;
 		ip->threat[j].gen_angle = rw_eight_ways[ip->threat[i].pos];
-		ip->threat[j].gen_vangle = -0.005;
+		ip->threat[j].gen_vangle = -va[tr];
 		ip->threat[j].d = t3f_distance(320, 240, ip->threat[i].x, ip->threat[i].y);
-		ip->threat[j].vd = 4.0;
+		ip->threat[j].vd = vd[tr];
 		ip->threat[j].x = ip->threat[i].x;
 		ip->threat[j].y = ip->threat[i].y;
 		ip->threat[j].vx = cos(ip->threat[j].gen_angle) * -ip->threat[j].gen_speed;
@@ -443,8 +462,8 @@ static void rw_break_large_threat(RW_INSTANCE * ip, int i)
 		ip->threat[j].size = 0;
 		ip->threat[j].type = RW_THREAT_PIECE;
 		ip->threat[j].active = true;
-		ip->threat_count++;
 	}
+	tr = (tr + 1) % 2;
 	j = rw_get_new_threat(ip);
 	if(j >= 0)
 	{
@@ -452,9 +471,9 @@ static void rw_break_large_threat(RW_INSTANCE * ip, int i)
 		r = r % 8;
 		ip->threat[j].gen_speed = -1.6;
 		ip->threat[j].gen_angle = rw_eight_ways[ip->threat[i].pos];
-		ip->threat[j].gen_vangle = 0.005;
+		ip->threat[j].gen_vangle = va[tr];
 		ip->threat[j].d = t3f_distance(320, 240, ip->threat[i].x, ip->threat[i].y);
-		ip->threat[j].vd = 4.0;
+		ip->threat[j].vd = vd[tr];
 		ip->threat[j].x = ip->threat[i].x;
 		ip->threat[j].y = ip->threat[i].y;
 		ip->threat[j].vx = cos(ip->threat[j].gen_angle) * -ip->threat[j].gen_speed;
@@ -465,7 +484,6 @@ static void rw_break_large_threat(RW_INSTANCE * ip, int i)
 		ip->threat[j].size = 0;
 		ip->threat[j].type = RW_THREAT_PIECE;
 		ip->threat[j].active = true;
-		ip->threat_count++;
 	}
 }
 
@@ -935,45 +953,47 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 	}
 	
 	/* generate enemies */
-	if(ip->ticks > rw_level_threat_ticks[ip->level] && t3f_rand(&ip->rng_state) % rw_level_prob_total[ip->level] < rw_level_prob[ip->level])
+	if(ip->ticks > ip->threat_wait)
 	{
-		if(t3f_rand(&ip->rng_state) % 100 < 10)
+		ip->big_threat_wait--;
+		if(ip->big_threat_wait <= 0)
 		{
 			rw_generate_threat(ip, RW_THREAT_LARGE);
+			ip->big_threat_wait = rw_big_threat_wait[ip->level] + t3f_rand(&ip->rng_state) % 5;
 		}
 		else
 		{
 			rw_generate_threat(ip, RW_THREAT_BASIC);
 		}
-		if(ip->threat_count > 15 && ip->level < 19)
-		{
-			ip->threat_count = 0;
-			t3f_play_sample(ip->sample[RW_SAMPLE_LEVEL_UP], 0.5, 0.0, 1.0);
-			ip->level++;
-			if(ip->level == 9)
-			{
-				ip->ship[0].way = t3f_rand(&ip->rng_state) % 8;
-				ip->ship[0].angle = rw_eight_ways[ip->ship[0].way];
-				ip->ship[0].vangle = 0.0;
-				ip->ship[0].dist = 320.0;
-				ip->ship[0].dest = 200.0;
-				ip->ship[0].vdist = -2.5;
-				ip->ship[0].ticks = 0;
-				ip->ship[0].active = true;
-			}
-			if(ip->level == 14)
-			{
-				ip->ship[1].way = t3f_rand(&ip->rng_state) % 8;
-				ip->ship[1].angle = rw_eight_ways[ip->ship[1].way];
-				ip->ship[1].vangle = 0.0;
-				ip->ship[1].dist = 320.0;
-				ip->ship[1].dest = 160.0;
-				ip->ship[1].vdist = -2.5;
-				ip->ship[1].ticks = 0;
-				ip->ship[1].active = true;
-			}
-		}
+		ip->threat_wait = rw_threat_wait[ip->level] + (t3f_rand(&ip->rng_state) % rw_threat_variance[ip->level]) - 30;
 		ip->ticks = 0;
+	}
+	if(ip->score % 900 == 0 && ip->level < 19)
+	{
+		t3f_play_sample(ip->sample[RW_SAMPLE_LEVEL_UP], 0.5, 0.0, 1.0);
+		ip->level++;
+		if(ip->level == 9)
+		{
+			ip->ship[0].way = t3f_rand(&ip->rng_state) % 8;
+			ip->ship[0].angle = rw_eight_ways[ip->ship[0].way];
+			ip->ship[0].vangle = 0.0;
+			ip->ship[0].dist = 320.0;
+			ip->ship[0].dest = 200.0;
+			ip->ship[0].vdist = -2.5;
+			ip->ship[0].ticks = 0;
+			ip->ship[0].active = true;
+		}
+		if(ip->level == 14)
+		{
+			ip->ship[1].way = t3f_rand(&ip->rng_state) % 8;
+			ip->ship[1].angle = rw_eight_ways[ip->ship[1].way];
+			ip->ship[1].vangle = 0.0;
+			ip->ship[1].dist = 320.0;
+			ip->ship[1].dest = 160.0;
+			ip->ship[1].vdist = -2.5;
+			ip->ship[1].ticks = 0;
+			ip->ship[1].active = true;
+		}
 	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 	{
@@ -1028,12 +1048,12 @@ void rw_state_game_render(RW_INSTANCE * ip)
 				}
 				case RW_THREAT_LARGE:
 				{
-					t3f_draw_scaled_rotated_bitmap(ip->bitmap[RW_BITMAP_THREAT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), al_get_bitmap_width(ip->bitmap[RW_BITMAP_THREAT]) / 2, al_get_bitmap_height(ip->bitmap[RW_BITMAP_THREAT]) / 2, ip->threat[i].x, ip->threat[i].y, -ip->camera_z, ip->threat[i].angle, 2.0, 2.0, 0);
+					t3f_draw_scaled_rotated_bitmap(ip->bitmap[RW_BITMAP_BIG_THREAT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), al_get_bitmap_width(ip->bitmap[RW_BITMAP_THREAT]) / 2, al_get_bitmap_height(ip->bitmap[RW_BITMAP_THREAT]) / 2, ip->threat[i].x, ip->threat[i].y, -ip->camera_z, ip->threat[i].angle, 2.0, 2.0, 0);
 					break;
 				}
 				case RW_THREAT_PIECE:
 				{
-					t3f_draw_scaled_rotated_bitmap(ip->bitmap[RW_BITMAP_THREAT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), al_get_bitmap_width(ip->bitmap[RW_BITMAP_THREAT]) / 2, al_get_bitmap_height(ip->bitmap[RW_BITMAP_THREAT]) / 2, ip->threat[i].x, ip->threat[i].y, -ip->camera_z, ip->threat[i].angle, 0.75, 0.75, 0);
+					t3f_draw_scaled_rotated_bitmap(ip->bitmap[RW_BITMAP_BIG_THREAT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), al_get_bitmap_width(ip->bitmap[RW_BITMAP_THREAT]) / 2, al_get_bitmap_height(ip->bitmap[RW_BITMAP_THREAT]) / 2, ip->threat[i].x, ip->threat[i].y, -ip->camera_z, ip->threat[i].angle, 0.75, 0.75, 0);
 					break;
 				}
 			}

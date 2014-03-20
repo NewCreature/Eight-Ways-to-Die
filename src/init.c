@@ -50,6 +50,7 @@ int rw_initialize(RW_INSTANCE * ip, int argc, char * argv[])
 	ip->bitmap[RW_BITMAP_SHIELD_6] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_SHIELD_6]), T3F_RESOURCE_TYPE_BITMAP, "data/shield6.png", 0, 0, 0);
 	ip->bitmap[RW_BITMAP_SHIELD_7] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_SHIELD_7]), T3F_RESOURCE_TYPE_BITMAP, "data/shield7.png", 0, 0, 0);
 	ip->bitmap[RW_BITMAP_THREAT] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_THREAT]), T3F_RESOURCE_TYPE_BITMAP, "data/threat.png", 0, 0, 0);
+	ip->bitmap[RW_BITMAP_BIG_THREAT] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_BIG_THREAT]), T3F_RESOURCE_TYPE_BITMAP, "data/big_threat.png", 0, 0, 0);
 	ip->bitmap[RW_BITMAP_SHIP] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_SHIP]), T3F_RESOURCE_TYPE_BITMAP, "data/ship.png", 0, 0, 0);
 	ip->bitmap[RW_BITMAP_SHOT] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_SHOT]), T3F_RESOURCE_TYPE_BITMAP, "data/shot.png", 0, 0, 0);
 	ip->bitmap[RW_BITMAP_PARTICLE] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_PARTICLE]), T3F_RESOURCE_TYPE_BITMAP, "data/particle.png", 0, 0, 0);
@@ -57,7 +58,7 @@ int rw_initialize(RW_INSTANCE * ip, int argc, char * argv[])
 	ip->bitmap[RW_BITMAP_T3_LOGO] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_T3_LOGO]), T3F_RESOURCE_TYPE_BITMAP, "data/t3.png", 0, 0, 0);
 	ip->bitmap[RW_BITMAP_ICON] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_ICON]), T3F_RESOURCE_TYPE_BITMAP, "data/icon.png", 0, 0, 0);
 	ip->bitmap[RW_BITMAP_GUIDE] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_GUIDE]), T3F_RESOURCE_TYPE_BITMAP, "data/guide.png", 0, 0, 0);
-	for(i = RW_BITMAP_WORLD; i <= RW_BITMAP_GUIDE; i++)
+	for(i = RW_BITMAP_WORLD; i <= RW_BITMAP_BIG_THREAT; i++)
 	{
 		if(!ip->bitmap[i])
 		{
@@ -78,6 +79,7 @@ int rw_initialize(RW_INSTANCE * ip, int argc, char * argv[])
 		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_SHIELD_6]);
 		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_SHIELD_7]);
 		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_THREAT]);
+		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_BIG_THREAT]);
 		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_SHIP]);
 		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_SHOT]);
 		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_PARTICLE]);

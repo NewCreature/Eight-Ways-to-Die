@@ -39,7 +39,6 @@ RW_INSTANCE * rw_create_instance(void)
 		ip->score = 0;
 		ip->high_score = 1800;
 		ip->new_high_score = false;
-		ip->threat_count = 0;
 		ip->level = 0;
 		ip->damage = 0;
 		ip->damage_time = 0;
@@ -51,6 +50,8 @@ RW_INSTANCE * rw_create_instance(void)
 		ip->music_on = true;
 		ip->vertical_scale = 1.0;
 		ip->third = 160.0;
+		ip->threat_wait = 0;
+		ip->big_threat_wait = 0;
 	}
 	return ip;
 }

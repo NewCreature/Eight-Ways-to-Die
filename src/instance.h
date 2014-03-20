@@ -43,7 +43,8 @@ typedef struct
 	int score;
 	int high_score;
 	bool new_high_score;
-	int threat_count;
+	int threat_wait;
+	int big_threat_wait;
 	int level;
 	int damage;
 	int damage_time;
