@@ -45,6 +45,7 @@
 #define RW_SAMPLE_LOGO        7
 #define RW_SAMPLE_GAME_START  8
 #define RW_SAMPLE_LOGO_OUT    9
+#define RW_SAMPLE_SHIP_FIRE  10
 
 #define RW_STATE_INTRO       0
 #define RW_STATE_TITLE       1

@@ -63,10 +63,10 @@ static float rw_level_threat_base_speed[RW_MAX_LEVELS] =
 
 static float rw_level_threat_speed[RW_MAX_LEVELS] = 
 {
-	0.6, 0.7, 0.8, 0.9, 1.0,
-	1.1, 1.2, 1.3, 1.4, 1.5,
-	1.6, 1.7, 1.8, 1.9, 2.0,
-	2.1, 2.2, 2.3, 2.4, 2.5
+	0.6, 0.8, 1.0, 1.2, 1.3,
+	1.4, 1.5, 1.6, 1.7, 1.8,
+	1.9, 2.0, 2.1, 2.2, 2.3,
+	2.4, 2.5, 2.6, 2.7, 2.8
 };
 
 static float rw_level_camera_z[RW_MAX_LEVELS] =
@@ -824,6 +824,7 @@ static void rw_state_game_ship_logic(RW_INSTANCE * ip, int i)
 							ip->shot[j].vy = sin(ip->ship[i].angle) * -3.0;
 							ip->shot[j].pos = ip->ship[i].way;
 							ip->shot[j].active = true;
+							t3f_play_sample(ip->sample[RW_SAMPLE_SHIP_FIRE], 0.75, rw_pan_eight_ways[ip->shot[i].pos] * 1.5, 1.0);
 							break;
 						}
 					}
@@ -972,7 +973,7 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 	{
 		t3f_play_sample(ip->sample[RW_SAMPLE_LEVEL_UP], 0.5, 0.0, 1.0);
 		ip->level++;
-		if(ip->level == 9)
+		if(ip->level == 6)
 		{
 			ip->ship[0].way = t3f_rand(&ip->rng_state) % 8;
 			ip->ship[0].angle = rw_eight_ways[ip->ship[0].way];
@@ -983,7 +984,7 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 			ip->ship[0].ticks = 0;
 			ip->ship[0].active = true;
 		}
-		if(ip->level == 14)
+		if(ip->level == 9)
 		{
 			ip->ship[1].way = t3f_rand(&ip->rng_state) % 8;
 			ip->ship[1].angle = rw_eight_ways[ip->ship[1].way];

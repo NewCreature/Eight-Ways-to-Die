@@ -108,7 +108,8 @@ int rw_initialize(RW_INSTANCE * ip, int argc, char * argv[])
 	ip->sample[RW_SAMPLE_LOGO] = al_load_sample("data/logo.ogg");
 	ip->sample[RW_SAMPLE_GAME_START] = al_load_sample("data/gamestart.ogg");
 	ip->sample[RW_SAMPLE_LOGO_OUT] = al_load_sample("data/logoout.ogg");
-	for(i = RW_SAMPLE_SHIELD; i <= RW_SAMPLE_LOGO_OUT; i++)
+	ip->sample[RW_SAMPLE_SHIP_FIRE] = al_load_sample("data/fire.ogg");
+	for(i = RW_SAMPLE_SHIELD; i <= RW_SAMPLE_SHIP_FIRE; i++)
 	{
 		if(!ip->sample[i])
 		{
