@@ -297,7 +297,7 @@ static void rw_deal_damage(RW_INSTANCE * ip)
 	{
 		rw_destroy_everything(ip);
 		ip->state = RW_STATE_GAME_OVER;
-		ip->intro_planet_z = ip->camera_z;
+		ip->intro_planet_z = -ip->camera_z;
 		ip->alert_ticks = 0;
 		for(i = 0; i < T3F_MAX_TOUCHES; i++)
 		{
@@ -370,7 +370,7 @@ static void rw_state_game_control_logic(RW_INSTANCE * ip)
 		{
 			rw_destroy_everything(ip);
 			ip->state = RW_STATE_GAME_OVER;
-			ip->intro_planet_z = ip->camera_z;
+			ip->intro_planet_z = -ip->camera_z;
 			break;
 		}
 		case '7':
