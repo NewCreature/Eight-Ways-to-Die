@@ -497,127 +497,11 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 		switch(ip->threat[i].type)
 		{
 			case RW_THREAT_BASIC:
-			{
-				ip->threat[i].x += ip->threat[i].vx;
-				ip->threat[i].y += ip->threat[i].vy;
-				ip->threat[i].angle += ip->threat[i].vangle;
-				if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < ip->threat[i].size)
-				{
-					t3f_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, rw_pan_eight_ways[ip->threat[i].pos], 1.0);
-					if(ip->threat[i].pos == 0)
-					{
-						min_angle = rw_eight_ways[7];
-						max_angle = rw_eight_ways[1];
-					}
-					else if(ip->threat[i].pos == 7)
-					{
-						min_angle = rw_eight_ways[6];
-						max_angle = rw_eight_ways[0];
-					}
-					else
-					{
-						min_angle = rw_eight_ways[ip->threat[i].pos - 1];
-						max_angle = rw_eight_ways[ip->threat[i].pos + 1];
-					}
-					for(j = 0; j < 8; j++)
-					{
-						rw_generate_particle(ip, ip->threat[i].x, ip->threat[i].y, min_angle, max_angle);
-					}
-					ip->threat[i].active = 0;
-					rw_deal_damage(ip);
-				}
-				else if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < ip->threat[i].size + 12.0)
-				{
-					if(ip->shield_generator.shield[ip->threat[i].pos].active)
-					{
-						t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, rw_pan_eight_ways[ip->threat[i].pos], 1.0);
-						if(ip->threat[i].pos == 0)
-						{
-							min_angle = rw_eight_ways[7];
-							max_angle = rw_eight_ways[1];
-						}
-						else if(ip->threat[i].pos == 7)
-						{
-							min_angle = rw_eight_ways[6];
-							max_angle = rw_eight_ways[0];
-						}
-						else
-						{
-							min_angle = rw_eight_ways[ip->threat[i].pos - 1];
-							max_angle = rw_eight_ways[ip->threat[i].pos + 1];
-						}
-						for(j = 0; j < 5; j++)
-						{
-							rw_generate_particle(ip, ip->threat[i].x, ip->threat[i].y, min_angle, max_angle);
-						}
-						ip->threat[i].active = 0;
-						ip->shield_generator.shield[ip->threat[i].pos].active = 0;
-						ip->shield_generator.shield[ip->threat[i].pos].life = RW_SHIELD_MAX_LIFE;
-					}
-				}
-				break;
-			}
 			case RW_THREAT_LARGE:
 			{
 				ip->threat[i].x += ip->threat[i].vx;
 				ip->threat[i].y += ip->threat[i].vy;
 				ip->threat[i].angle += ip->threat[i].vangle;
-				if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < ip->threat[i].size)
-				{
-					t3f_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, rw_pan_eight_ways[ip->threat[i].pos], 1.0);
-					if(ip->threat[i].pos == 0)
-					{
-						min_angle = rw_eight_ways[7];
-						max_angle = rw_eight_ways[1];
-					}
-					else if(ip->threat[i].pos == 7)
-					{
-						min_angle = rw_eight_ways[6];
-						max_angle = rw_eight_ways[0];
-					}
-					else
-					{
-						min_angle = rw_eight_ways[ip->threat[i].pos - 1];
-						max_angle = rw_eight_ways[ip->threat[i].pos + 1];
-					}
-					for(j = 0; j < 8; j++)
-					{
-						rw_generate_particle(ip, ip->threat[i].x, ip->threat[i].y, min_angle, max_angle);
-					}
-					rw_break_large_threat(ip, i);
-					ip->threat[i].active = 0;
-					rw_deal_damage(ip);
-				}
-				else if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < ip->threat[i].size + 12.0)
-				{
-					if(ip->shield_generator.shield[ip->threat[i].pos].active)
-					{
-						t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, rw_pan_eight_ways[ip->threat[i].pos], 1.0);
-						if(ip->threat[i].pos == 0)
-						{
-							min_angle = rw_eight_ways[7];
-							max_angle = rw_eight_ways[1];
-						}
-						else if(ip->threat[i].pos == 7)
-						{
-							min_angle = rw_eight_ways[6];
-							max_angle = rw_eight_ways[0];
-						}
-						else
-						{
-							min_angle = rw_eight_ways[ip->threat[i].pos - 1];
-							max_angle = rw_eight_ways[ip->threat[i].pos + 1];
-						}
-						for(j = 0; j < 5; j++)
-						{
-							rw_generate_particle(ip, ip->threat[i].x, ip->threat[i].y, min_angle, max_angle);
-						}
-						rw_break_large_threat(ip, i);
-						ip->threat[i].active = 0;
-						ip->shield_generator.shield[ip->threat[i].pos].active = 0;
-						ip->shield_generator.shield[ip->threat[i].pos].life = RW_SHIELD_MAX_LIFE;
-					}
-				}
 				break;
 			}
 			case RW_THREAT_PIECE:
@@ -628,62 +512,69 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 				ip->threat[i].x = 320.0 + cos(ip->threat[i].gen_angle) * ip->threat[i].d;
 				ip->threat[i].y = 240. + sin(ip->threat[i].gen_angle) * ip->threat[i].d;
 				ip->threat[i].angle += ip->threat[i].vangle;
-				if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < ip->threat[i].size)
-				{
-					t3f_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, rw_pan_eight_ways[ip->threat[i].pos], 1.0);
-					if(ip->threat[i].pos == 0)
-					{
-						min_angle = rw_eight_ways[7];
-						max_angle = rw_eight_ways[1];
-					}
-					else if(ip->threat[i].pos == 7)
-					{
-						min_angle = rw_eight_ways[6];
-						max_angle = rw_eight_ways[0];
-					}
-					else
-					{
-						min_angle = rw_eight_ways[ip->threat[i].pos - 1];
-						max_angle = rw_eight_ways[ip->threat[i].pos + 1];
-					}
-					for(j = 0; j < 8; j++)
-					{
-						rw_generate_particle(ip, ip->threat[i].x, ip->threat[i].y, min_angle, max_angle);
-					}
-					ip->threat[i].active = 0;
-					rw_deal_damage(ip);
-				}
-				else if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < ip->threat[i].size + 12)
-				{
-					if(ip->shield_generator.shield[ip->threat[i].pos].active && ip->threat[i].vd <= 0.0)
-					{
-						t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, rw_pan_eight_ways[ip->threat[i].pos], 1.0);
-						if(ip->threat[i].pos == 0)
-						{
-							min_angle = rw_eight_ways[7];
-							max_angle = rw_eight_ways[1];
-						}
-						else if(ip->threat[i].pos == 7)
-						{
-							min_angle = rw_eight_ways[6];
-							max_angle = rw_eight_ways[0];
-						}
-						else
-						{
-							min_angle = rw_eight_ways[ip->threat[i].pos - 1];
-							max_angle = rw_eight_ways[ip->threat[i].pos + 1];
-						}
-						for(j = 0; j < 5; j++)
-						{
-							rw_generate_particle(ip, ip->threat[i].x, ip->threat[i].y, min_angle, max_angle);
-						}
-						ip->threat[i].active = 0;
-						ip->shield_generator.shield[ip->threat[i].pos].active = 0;
-						ip->shield_generator.shield[ip->threat[i].pos].life = RW_SHIELD_MAX_LIFE;
-					}
-				}
 				break;
 			}
+		}
+		
+		/* detect collisions */
+		if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < ip->threat[i].size + 12.0 && ip->shield_generator.shield[ip->threat[i].pos].active)
+		{
+			t3f_play_sample(ip->sample[RW_SAMPLE_HIT], 0.5, rw_pan_eight_ways[ip->threat[i].pos], 1.0);
+			if(ip->threat[i].pos == 0)
+			{
+				min_angle = rw_eight_ways[7];
+				max_angle = rw_eight_ways[1];
+			}
+			else if(ip->threat[i].pos == 7)
+			{
+				min_angle = rw_eight_ways[6];
+				max_angle = rw_eight_ways[0];
+			}
+			else
+			{
+				min_angle = rw_eight_ways[ip->threat[i].pos - 1];
+				max_angle = rw_eight_ways[ip->threat[i].pos + 1];
+			}
+			for(j = 0; j < 5; j++)
+			{
+				rw_generate_particle(ip, ip->threat[i].x, ip->threat[i].y, min_angle, max_angle);
+			}
+			if(ip->threat[i].type == RW_THREAT_LARGE)
+			{
+				rw_break_large_threat(ip, i);
+			}
+			ip->threat[i].active = 0;
+			ip->shield_generator.shield[ip->threat[i].pos].active = 0;
+			ip->shield_generator.shield[ip->threat[i].pos].life = RW_SHIELD_MAX_LIFE;
+		}
+		else if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < ip->threat[i].size)
+		{
+			t3f_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, rw_pan_eight_ways[ip->threat[i].pos], 1.0);
+			if(ip->threat[i].pos == 0)
+			{
+				min_angle = rw_eight_ways[7];
+				max_angle = rw_eight_ways[1];
+			}
+			else if(ip->threat[i].pos == 7)
+			{
+				min_angle = rw_eight_ways[6];
+				max_angle = rw_eight_ways[0];
+			}
+			else
+			{
+				min_angle = rw_eight_ways[ip->threat[i].pos - 1];
+				max_angle = rw_eight_ways[ip->threat[i].pos + 1];
+			}
+			for(j = 0; j < 8; j++)
+			{
+				rw_generate_particle(ip, ip->threat[i].x, ip->threat[i].y, min_angle, max_angle);
+			}
+			if(ip->threat[i].type == RW_THREAT_LARGE)
+			{
+				rw_break_large_threat(ip, i);
+			}
+			ip->threat[i].active = 0;
+			rw_deal_damage(ip);
 		}
 	}
 }
