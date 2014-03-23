@@ -128,7 +128,7 @@ static int rw_generate_threat(RW_INSTANCE * ip, int type)
 					ip->threat[i].angle = 0.0;
 					ip->threat[i].vangle = (float)((float)(t3f_rand(&ip->rng_state) % 100) / 400.0 - 0.125);
 					ip->threat[i].pos = r;
-					ip->threat[i].size = 0;
+					ip->threat[i].size = 36;
 					ip->threat[i].type = type;
 					ip->threat[i].active = true;
 					break;
@@ -149,7 +149,7 @@ static int rw_generate_threat(RW_INSTANCE * ip, int type)
 					ip->threat[i].angle = 0.0;
 					ip->threat[i].vangle = (float)((float)(t3f_rand(&ip->rng_state) % 100) / 400.0 - 0.125);
 					ip->threat[i].pos = r;
-					ip->threat[i].size = 0;
+					ip->threat[i].size = 48;
 					ip->threat[i].type = type;
 					ip->threat[i].active = true;
 					break;
@@ -459,7 +459,7 @@ static void rw_break_large_threat(RW_INSTANCE * ip, int i)
 		ip->threat[j].angle = 0.0;
 		ip->threat[j].vangle = (float)((float)(t3f_rand(&ip->rng_state) % 100) / 400.0 - 0.125);
 		ip->threat[j].pos = r;
-		ip->threat[j].size = 0;
+		ip->threat[j].size = 36;
 		ip->threat[j].type = RW_THREAT_PIECE;
 		ip->threat[j].active = true;
 	}
@@ -481,7 +481,7 @@ static void rw_break_large_threat(RW_INSTANCE * ip, int i)
 		ip->threat[j].angle = 0.0;
 		ip->threat[j].vangle = (float)((float)(t3f_rand(&ip->rng_state) % 100) / 400.0 - 0.125);
 		ip->threat[j].pos = r;
-		ip->threat[j].size = 0;
+		ip->threat[j].size = 36;
 		ip->threat[j].type = RW_THREAT_PIECE;
 		ip->threat[j].active = true;
 	}
@@ -501,7 +501,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 				ip->threat[i].x += ip->threat[i].vx;
 				ip->threat[i].y += ip->threat[i].vy;
 				ip->threat[i].angle += ip->threat[i].vangle;
-				if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < 36.0)
+				if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < ip->threat[i].size)
 				{
 					t3f_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, rw_pan_eight_ways[ip->threat[i].pos], 1.0);
 					if(ip->threat[i].pos == 0)
@@ -526,7 +526,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 					ip->threat[i].active = 0;
 					rw_deal_damage(ip);
 				}
-				else if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < 48.0)
+				else if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < ip->threat[i].size + 12.0)
 				{
 					if(ip->shield_generator.shield[ip->threat[i].pos].active)
 					{
@@ -562,7 +562,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 				ip->threat[i].x += ip->threat[i].vx;
 				ip->threat[i].y += ip->threat[i].vy;
 				ip->threat[i].angle += ip->threat[i].vangle;
-				if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < 44.0)
+				if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < ip->threat[i].size)
 				{
 					t3f_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, rw_pan_eight_ways[ip->threat[i].pos], 1.0);
 					if(ip->threat[i].pos == 0)
@@ -588,7 +588,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 					ip->threat[i].active = 0;
 					rw_deal_damage(ip);
 				}
-				else if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < 52.0)
+				else if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < ip->threat[i].size + 12.0)
 				{
 					if(ip->shield_generator.shield[ip->threat[i].pos].active)
 					{
@@ -628,7 +628,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 				ip->threat[i].x = 320.0 + cos(ip->threat[i].gen_angle) * ip->threat[i].d;
 				ip->threat[i].y = 240. + sin(ip->threat[i].gen_angle) * ip->threat[i].d;
 				ip->threat[i].angle += ip->threat[i].vangle;
-				if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < 36.0)
+				if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < ip->threat[i].size)
 				{
 					t3f_play_sample(ip->sample[RW_SAMPLE_DAMAGE], 0.5, rw_pan_eight_ways[ip->threat[i].pos], 1.0);
 					if(ip->threat[i].pos == 0)
@@ -653,7 +653,7 @@ static void rw_state_game_threat_logic(RW_INSTANCE * ip, int i)
 					ip->threat[i].active = 0;
 					rw_deal_damage(ip);
 				}
-				else if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < 48.0)
+				else if(t3f_distance(320.0, 240.0, ip->threat[i].x, ip->threat[i].y) < ip->threat[i].size + 12)
 				{
 					if(ip->shield_generator.shield[ip->threat[i].pos].active && ip->threat[i].vd <= 0.0)
 					{
