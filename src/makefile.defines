@@ -73,7 +73,7 @@ GLOBAL_CFLAGS = -O2 -fomit-frame-pointer -funroll-loops -Wall -I. -DT3F_DEVELOPE
 ##########################
 DEBIAN_APP_NAME = $(subst _,-,$(APP_NAME))
 DEBIAN_SECTION = games
-DEBIAN_DEPENDS = libc6,\ libmxml1,\ libcurl3-gnutls
-DEBIAN_MAINTAINER = Your\ Name\ \<user\@email.com\>
-DEBIAN_DESCRIPTION = Short\ decription\ of\ your\ app.
-DEBIAN_LONG_DESCRIPTION = Long\ description\ of\ your\ app.
+DEBIAN_DEPENDS = libc6
+DEBIAN_MAINTAINER = Todd\ Cope\ \<todd\@t3-i.com\>
+DEBIAN_DESCRIPTION = Defend\ the\ planet\ from\ incoming\ threats\ for\ as\ long\ as\ possible.
+DEBIAN_LONG_DESCRIPTION = An\ arcade\ defense\ game\ inspired\ by\ the\ old\ Commodore\ 64\ game\ Star\ Post.\ The\ object\ of\ the\ game\ is\ to\ protect\ Earth\ from\ the\ incoming\ threats\ for\ as\ long\ as\ possible.
