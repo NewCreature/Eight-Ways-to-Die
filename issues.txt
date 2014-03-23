@@ -6,3 +6,6 @@ Version 1.2
 	   
 	   [ ]Introduce large threat at level 2. Only generate large every so often.
 	      Later levels will generate more large threats.
+
+	[ ]I saw a ship appear in the wrong place. I think something is not being
+	   initialized correctly when the ships are activated.
