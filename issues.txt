@@ -1,8 +1,1 @@
-Version 1.2
 
-	[ ]Rebalance difficulty. I think the speed of threats should be limited
-	   based on the level. Later levels would generate more and faster threats.
-	   The first level should be easy to beat.
-	   
-	   [ ]Introduce large threat at level 2. Only generate large every so often.
-	      Later levels will generate more large threats.
