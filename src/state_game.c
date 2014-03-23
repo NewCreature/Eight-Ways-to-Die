@@ -983,6 +983,7 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 			ip->ship[0].vdist = -2.5;
 			ip->ship[0].ticks = 0;
 			ip->ship[0].active = true;
+			rw_state_game_ship_logic(ip, 0);
 		}
 		if(ip->level == 9)
 		{
@@ -994,6 +995,7 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 			ip->ship[1].vdist = -2.5;
 			ip->ship[1].ticks = 0;
 			ip->ship[1].active = true;
+			rw_state_game_ship_logic(ip, 1);
 		}
 	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
