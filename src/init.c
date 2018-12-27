@@ -7,39 +7,29 @@
 
 static void rw_atlas_bitmap(T3F_ATLAS * ap, ALLEGRO_BITMAP ** bitmap)
 {
-	ALLEGRO_BITMAP * bp;
-	bp = t3f_add_bitmap_to_atlas(ap, bitmap, T3F_ATLAS_SPRITE);
-
-	if(bp)
-	{
-		al_destroy_bitmap(*bitmap);
-		*bitmap = bp;
-	}
-	else
-	{
-		printf("could not atlas bitmap\n");
-	}
+	t3f_add_bitmap_to_atlas(ap, bitmap, T3F_ATLAS_SPRITE);
 }
 
 int rw_initialize(RW_INSTANCE * ip, int argc, char * argv[])
 {
+	char buf[1024];
 	int i;
 	int flags = 0;
-	
+
 	flags |= T3F_USE_KEYBOARD;
 	flags |= T3F_USE_MOUSE;
 	flags |= T3F_USE_TOUCH;
 	flags |= T3F_USE_SOUND;
 	flags |= T3F_FORCE_ASPECT;
 	flags |= T3F_FILL_SCREEN;
-	
+
 	if(!t3f_initialize("Eight Ways to Die", 640, 480, 60.0, rw_logic, rw_render, flags, ip))
 	{
 		return 0;
 	}
-	
+
 	t3f_set_event_handler(rw_event_handler);
-	
+
 	ip->bitmap[RW_BITMAP_WORLD] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_WORLD]), T3F_RESOURCE_TYPE_BITMAP, "data/world.png", 0, 0, 0);
 	ip->bitmap[RW_BITMAP_SHIELD_0] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_SHIELD_0]), T3F_RESOURCE_TYPE_BITMAP, "data/shield0.png", 0, 0, 0);
 	ip->bitmap[RW_BITMAP_SHIELD_1] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_SHIELD_1]), T3F_RESOURCE_TYPE_BITMAP, "data/shield1.png", 0, 0, 0);
@@ -85,20 +75,20 @@ int rw_initialize(RW_INSTANCE * ip, int argc, char * argv[])
 		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_PARTICLE]);
 		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_GUIDE]);
 	}
-	
+
 	#ifndef ALLEGRO_MACOSX
 		#ifndef T3F_ANDROID
 			al_set_display_icon(t3f_display, ip->bitmap[RW_BITMAP_ICON]);
 		#endif
 	#endif
-	
+
 	ip->font = ocd_load_font("data/gamefont.pcx");
 	if(!ip->font)
 	{
 		printf("Error loading font!\n");
 		return 0;
 	}
-	
+
 	ip->sample[RW_SAMPLE_DAMAGE] = al_load_sample("data/damage.ogg");
 	ip->sample[RW_SAMPLE_HIT] = al_load_sample("data/hit.ogg");
 	ip->sample[RW_SAMPLE_SHIELD] = al_load_sample("data/shield.ogg");
@@ -118,10 +108,10 @@ int rw_initialize(RW_INSTANCE * ip, int argc, char * argv[])
 		}
 	}
 
-	rw_load_high_score(ip, t3f_get_filename(t3f_data_path, "rw.hs"));
-	
-	ip->vertical_scale = (t3f_display_bottom - t3f_display_top) / 480.0;
-	ip->third = (t3f_display_bottom - t3f_display_top) / 3.0;
+	rw_load_high_score(ip, t3f_get_filename(t3f_data_path, "rw.hs", buf, 1024));
+
+	ip->vertical_scale = (t3f_default_view->bottom - t3f_default_view->top) / 480.0;
+	ip->third = (t3f_default_view->bottom - t3f_default_view->top) / 3.0;
 	t3f_srand(&ip->rng_state, time(0));
 	return 1;
 }

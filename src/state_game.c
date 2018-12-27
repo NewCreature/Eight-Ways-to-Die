@@ -967,9 +967,9 @@ void rw_state_game_render(RW_INSTANCE * ip)
 			t3f_draw_rotated_bitmap(ip->bitmap[RW_BITMAP_SHIP], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), al_get_bitmap_width(ip->bitmap[RW_BITMAP_SHIP]) / 2, al_get_bitmap_height(ip->bitmap[RW_BITMAP_SHIP]) / 2, ip->ship[i].x, ip->ship[i].y, -ip->camera_z, ip->ship[i].angle, 0);
 		}
 	}
-	al_draw_textf(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320 - al_get_text_width(ip->font, "HIGH SCORE - 0:00:00") / 2, t3f_display_top, 0, "HIGH SCORE - %d:%02d:%02d", ip->high_score / 3600, (ip->high_score / 60) % 60, (int)(((float)(ip->high_score % 60) / 60.0) * 100.0) % 100);
-	al_draw_textf(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320 - al_get_text_width(ip->font, "SCORE - 0:00:00") / 2, t3f_display_top + 16, 0, "SCORE - %d:%02d:%02d", ip->score / 3600, (ip->score / 60) % 60, (int)(((float)(ip->score % 60) / 60.0) * 100.0) % 100);
-	al_draw_textf(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320, t3f_display_top + 32, ALLEGRO_ALIGN_CENTRE, "LEVEL - %d", ip->level + 1);
+	al_draw_textf(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320 - al_get_text_width(ip->font, "HIGH SCORE - 0:00:00") / 2, t3f_default_view->top, 0, "HIGH SCORE - %d:%02d:%02d", ip->high_score / 3600, (ip->high_score / 60) % 60, (int)(((float)(ip->high_score % 60) / 60.0) * 100.0) % 100);
+	al_draw_textf(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320 - al_get_text_width(ip->font, "SCORE - 0:00:00") / 2, t3f_default_view->top + 16, 0, "SCORE - %d:%02d:%02d", ip->score / 3600, (ip->score / 60) % 60, (int)(((float)(ip->score % 60) / 60.0) * 100.0) % 100);
+	al_draw_textf(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320, t3f_default_view->top + 32, ALLEGRO_ALIGN_CENTRE, "LEVEL - %d", ip->level + 1);
 	if(ip->control_mode == RW_CONTROL_MODE_HOT_SPOTS)
 	{
 		rw_render_hot_spots(ip);

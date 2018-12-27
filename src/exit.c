@@ -6,9 +6,10 @@
 
 int rw_exit(RW_INSTANCE * ip)
 {
+	char buf[1024];
 	int i;
-	
-	rw_save_high_score(ip, t3f_get_filename(t3f_data_path, "rw.hs"));
+
+	rw_save_high_score(ip, t3f_get_filename(t3f_data_path, "rw.hs", buf, 1024));
 	t3f_stop_music();
 	for(i = 0; i < RW_MAX_BITMAPS; i++)
 	{
