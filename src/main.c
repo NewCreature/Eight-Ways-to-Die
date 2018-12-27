@@ -4,7 +4,7 @@
 int main(int argc, char * argv[])
 {
 	RW_INSTANCE * instance;
-	
+
 	instance = rw_create_instance();
 	if(!instance)
 	{
@@ -26,5 +26,6 @@ int main(int argc, char * argv[])
 	}
 	rw_exit(instance);
 	rw_destroy_instance(instance);
+	t3f_finish();
 	return 0;
 }
