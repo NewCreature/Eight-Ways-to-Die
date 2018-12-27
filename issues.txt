@@ -3,3 +3,5 @@ Issues
 
 [ ]See about removing the logo animation and adding copyright info to the title
    screen.
+
+[ ]Update changelog.
