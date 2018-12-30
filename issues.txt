@@ -1,6 +1,8 @@
 Issues
 ------
 
+[ ]Fix icon set to comply with new T3F requirements.
+
 [ ]See about removing the logo animation and adding copyright info to the title
    screen.
 
