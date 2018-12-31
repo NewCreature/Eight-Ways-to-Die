@@ -2,6 +2,21 @@
 
 #include "t3f/draw.h"
 
+static bool check_intro_cancel(RW_INSTANCE * ip)
+{
+	if(t3f_key_pressed() || t3f_mouse_button[0])
+	{
+		return true;
+	}
+	return false;
+}
+
+static void finish_intro(RW_INSTANCE * ip)
+{
+	ip->intro_planet_z = -400.0;
+	ip->state = RW_STATE_TITLE;
+}
+
 void rw_state_intro_logic(RW_INSTANCE * ip)
 {
 	switch(ip->intro_state)
@@ -43,8 +58,7 @@ void rw_state_intro_logic(RW_INSTANCE * ip)
 			ip->intro_planet_z -= 10.0;
 			if(ip->intro_planet_z <= -400.0)
 			{
-				ip->intro_planet_z = -400.0;
-				ip->state = RW_STATE_TITLE;
+				finish_intro(ip);
 			}
 			ip->intro_planet_angle += 0.01;
 			break;
@@ -53,6 +67,10 @@ void rw_state_intro_logic(RW_INSTANCE * ip)
 	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
 	{
 		ip->quit = 1;
+	}
+	else if(check_intro_cancel(ip))
+	{
+		finish_intro(ip);
 	}
 }
 
