@@ -4,10 +4,11 @@ RW_INSTANCE * rw_create_instance(void)
 {
 	RW_INSTANCE * ip;
 	int i;
-	
+
 	ip = al_malloc(sizeof(RW_INSTANCE));
 	if(ip)
 	{
+		memset(ip, 0, sizeof(RW_INSTANCE));
 		ip->intro_z = -700.0;
 		ip->intro_planet_z = 40.0;
 		ip->intro_planet_angle = 0.0;
