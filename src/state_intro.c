@@ -4,6 +4,16 @@
 
 static bool check_intro_cancel(RW_INSTANCE * ip)
 {
+	int i;
+
+	for(i = 0; i < T3F_MAX_TOUCHES; i++)
+	{
+		if(t3f_touch[i].active)
+		{
+			t3f_touch[i].active = false;
+			return true;
+		}
+	}
 	if(t3f_key_pressed() || t3f_mouse_button[0])
 	{
 		return true;
