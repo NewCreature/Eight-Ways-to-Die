@@ -74,6 +74,9 @@ app_clean:
 ##########################
 DEBIAN_APP_NAME = $(subst _,-,$(APP_NAME))
 DEBIAN_SECTION = games
+DEBIAN_MENU_SECTION = Games
+DEBIAN_DESKTOP_CATEGORIES = Game
+DEBIAN_DIR = games
 DEBIAN_DEPENDS = libc6
 DEBIAN_MAINTAINER = Todd\ Cope\ \<todd\@t3-i.com\>
 DEBIAN_DESCRIPTION = Defend\ the\ planet\ from\ incoming\ threats\ for\ as\ long\ as\ possible.
