@@ -75,12 +75,6 @@ int rw_initialize(RW_INSTANCE * ip, int argc, char * argv[])
 		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_GUIDE]);
 	}
 
-	#ifndef ALLEGRO_MACOSX
-		#ifndef T3F_ANDROID
-			al_set_display_icon(t3f_display, ip->bitmap[RW_BITMAP_ICON]);
-		#endif
-	#endif
-
 	ip->font = ocd_load_font("data/gamefont.pcx");
 	if(!ip->font)
 	{
