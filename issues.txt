@@ -1,9 +1,13 @@
 Issues
 ------
 
-[ ]Fix icon set to comply with new T3F requirements.
+[X]Fix icon set to comply with new T3F requirements.
 
-[ ]See about removing the logo animation and adding copyright info to the title
+[X]See about removing the logo animation and adding copyright info to the title
    screen.
+
+   [X]Decided to leave the logo animation and just make it skippable. The game
+      doesn't include assets we can use to properly display copyright info on
+      the title screen.
 
 [ ]Update changelog.
