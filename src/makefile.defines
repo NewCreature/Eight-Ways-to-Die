@@ -9,7 +9,7 @@ include makefile.include
 #########################
 APP_COMPANY = t3-i
 APP_NAME = eight-ways-to-die
-APP_BUNDLE_NAME = Eight\ Ways\ To\ Die
+APP_TITLE = Eight\ Ways\ To\ Die
 APP_VERSION = 1.2.1
 APP_RELEASE = 2
 APP_PUBLISHER = T³\ Software
