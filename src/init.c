@@ -46,7 +46,6 @@ int rw_initialize(RW_INSTANCE * ip, int argc, char * argv[])
 	ip->bitmap[RW_BITMAP_PARTICLE] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_PARTICLE]), T3F_RESOURCE_TYPE_BITMAP, "data/particle.png", 0, 0, 0);
 	ip->bitmap[RW_BITMAP_LOGO] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_LOGO]), T3F_RESOURCE_TYPE_BITMAP, "data/logo.png", 0, 0, 0);
 	ip->bitmap[RW_BITMAP_T3_LOGO] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_T3_LOGO]), T3F_RESOURCE_TYPE_BITMAP, "data/t3.png", 0, 0, 0);
-	ip->bitmap[RW_BITMAP_ICON] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_ICON]), T3F_RESOURCE_TYPE_BITMAP, "data/icon.png", 0, 0, 0);
 	ip->bitmap[RW_BITMAP_GUIDE] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_GUIDE]), T3F_RESOURCE_TYPE_BITMAP, "data/guide.png", 0, 0, 0);
 	for(i = RW_BITMAP_WORLD; i <= RW_BITMAP_BIG_THREAT; i++)
 	{

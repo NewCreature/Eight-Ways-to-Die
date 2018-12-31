@@ -31,8 +31,7 @@
 #define RW_BITMAP_LOGO       13
 #define RW_BITMAP_T3_LOGO    14
 #define RW_BITMAP_GUIDE      15
-#define RW_BITMAP_ICON       16
-#define RW_BITMAP_BIG_THREAT 17
+#define RW_BITMAP_BIG_THREAT 16
 
 #define RW_MAX_SAMPLES       32
 #define RW_SAMPLE_START       0
