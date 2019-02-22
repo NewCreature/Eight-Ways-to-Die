@@ -1,0 +1,18 @@
+Eight Ways To Die (1.2.2) maverick; urgency=low
+
+  * Fix issues with Android port that were preventing it from working on many
+    devices.
+
+ -- Todd Cope <todd@t3-i.com>  Fri, 22 Feb 2019 22:52:45 +0000
+
+eight-ways-to-die (1.2.1) maverick; urgency=low
+
+  * Made intro sequence skippable.
+
+ -- Todd Cope <todd@t3-i.com>  Mon, 31 Dec 2018 15:24:40 +0000
+
+eight-ways-to-die (1.2) maverick; urgency=low
+
+  * First packaged release.
+
+ -- Todd Cope <todd@t3-i.com>  Sun, 23 Mar 2014 18:52:45 +0000
