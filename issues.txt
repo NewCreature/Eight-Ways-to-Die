@@ -1,7 +1,7 @@
 Issues
 ------
 
-[ ]Fix mouse menu navigation. Currently, you can't activate any menu items with
+[X]Fix mouse menu navigation. Currently, you can't activate any menu items with
    the mouse.
 
 [X]Fix icon set to comply with new T3F requirements.
