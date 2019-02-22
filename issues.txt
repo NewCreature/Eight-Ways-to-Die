@@ -1,6 +1,9 @@
 Issues
 ------
 
+[ ]Fix mouse menu navigation. Currently, you can't activate any menu items with
+   the mouse.
+
 [X]Fix icon set to comply with new T3F requirements.
 
 [X]See about removing the logo animation and adding copyright info to the title
