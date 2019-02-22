@@ -13,4 +13,4 @@ Issues
       doesn't include assets we can use to properly display copyright info on
       the title screen.
 
-[ ]Update changelog.
+[X]Update changelog.
