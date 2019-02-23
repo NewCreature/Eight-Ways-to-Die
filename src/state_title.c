@@ -13,8 +13,8 @@
 static void rw_render_menu(RW_INSTANCE * ip)
 {
 	float mouse_x = 320.0, mouse_y = 240.0;
-	
-	if((t3f_flags & T3F_USE_MOUSE) && !(t3f_flags & T3F_USE_TOUCH))
+
+	if(t3f_flags & T3F_USE_MOUSE)
 	{
 		mouse_x = t3f_mouse_x;
 		mouse_y = t3f_mouse_y;
@@ -42,15 +42,15 @@ void rw_state_title_logic(RW_INSTANCE * ip)
 {
 	int key = 0;
 	int touch_key = 0;
-	
+
 	key = rw_keyboard_logic(ip);
-	
+
 	touch_key = rw_hotspot_logic(ip);
 	if(touch_key)
 	{
 		key = touch_key;
 	}
-	
+
 	ip->intro_planet_angle += 0.01;
 	if(ip->intro_planet_angle >= ALLEGRO_PI * 2.0)
 	{
@@ -88,7 +88,7 @@ void rw_state_title_logic(RW_INSTANCE * ip)
 void rw_state_title_render(RW_INSTANCE * ip)
 {
 	float alpha;
-	
+
 	al_clear_to_color(al_map_rgb(0, 0, 0));
 	al_draw_textf(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320 - al_get_text_width(ip->font, "HIGH SCORE - 0:00:00") / 2, t3f_default_view->top, 0, "HIGH SCORE - %d:%02d:%02d", ip->high_score / 3600, (ip->high_score / 60) % 60, (int)(((float)(ip->high_score % 60) / 60.0) * 100.0) % 100);
 	t3f_draw_rotated_bitmap(ip->bitmap[RW_BITMAP_WORLD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), al_get_bitmap_width(ip->bitmap[RW_BITMAP_WORLD]) / 2, al_get_bitmap_height(ip->bitmap[RW_BITMAP_WORLD]) / 2, 640 / 2, 480 / 2, ip->intro_planet_z, ip->intro_planet_angle, 0);
