@@ -11,7 +11,7 @@ int rw_hotspot_logic(RW_INSTANCE * ip)
 	int i;
 	
 	/* read one touch at a time and simulate key press for first touch detected */
-	for(i = 2; i < T3F_MAX_TOUCHES; i++)
+	for(i = 0; i < T3F_MAX_TOUCHES; i++)
 	{
 		if(t3f_touch_pressed(i))
 		{
