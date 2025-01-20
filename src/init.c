@@ -5,9 +5,9 @@
 #include "high_score.h"
 #include "event.h"
 
-static void rw_atlas_bitmap(T3F_ATLAS * ap, ALLEGRO_BITMAP ** bitmap)
+static void rw_atlas_bitmap(T3F_ATLAS * ap, T3F_BITMAP * bitmap)
 {
-	t3f_add_bitmap_to_atlas(ap, bitmap, T3F_ATLAS_SPRITE);
+	t3f_add_bitmap_to_atlas(ap, &bitmap->bitmap, T3F_ATLAS_SPRITE);
 }
 
 int rw_initialize(RW_INSTANCE * ip, int argc, char * argv[])
@@ -30,23 +30,23 @@ int rw_initialize(RW_INSTANCE * ip, int argc, char * argv[])
 
 	t3f_set_event_handler(rw_event_handler);
 
-	ip->bitmap[RW_BITMAP_WORLD] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_WORLD]), T3F_RESOURCE_TYPE_BITMAP, "data/world.png", 0, 0, 0);
-	ip->bitmap[RW_BITMAP_SHIELD_0] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_SHIELD_0]), T3F_RESOURCE_TYPE_BITMAP, "data/shield0.png", 0, 0, 0);
-	ip->bitmap[RW_BITMAP_SHIELD_1] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_SHIELD_1]), T3F_RESOURCE_TYPE_BITMAP, "data/shield1.png", 0, 0, 0);
-	ip->bitmap[RW_BITMAP_SHIELD_2] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_SHIELD_2]), T3F_RESOURCE_TYPE_BITMAP, "data/shield2.png", 0, 0, 0);
-	ip->bitmap[RW_BITMAP_SHIELD_3] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_SHIELD_3]), T3F_RESOURCE_TYPE_BITMAP, "data/shield3.png", 0, 0, 0);
-	ip->bitmap[RW_BITMAP_SHIELD_4] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_SHIELD_4]), T3F_RESOURCE_TYPE_BITMAP, "data/shield4.png", 0, 0, 0);
-	ip->bitmap[RW_BITMAP_SHIELD_5] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_SHIELD_5]), T3F_RESOURCE_TYPE_BITMAP, "data/shield5.png", 0, 0, 0);
-	ip->bitmap[RW_BITMAP_SHIELD_6] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_SHIELD_6]), T3F_RESOURCE_TYPE_BITMAP, "data/shield6.png", 0, 0, 0);
-	ip->bitmap[RW_BITMAP_SHIELD_7] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_SHIELD_7]), T3F_RESOURCE_TYPE_BITMAP, "data/shield7.png", 0, 0, 0);
-	ip->bitmap[RW_BITMAP_THREAT] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_THREAT]), T3F_RESOURCE_TYPE_BITMAP, "data/threat.png", 0, 0, 0);
-	ip->bitmap[RW_BITMAP_BIG_THREAT] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_BIG_THREAT]), T3F_RESOURCE_TYPE_BITMAP, "data/big_threat.png", 0, 0, 0);
-	ip->bitmap[RW_BITMAP_SHIP] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_SHIP]), T3F_RESOURCE_TYPE_BITMAP, "data/ship.png", 0, 0, 0);
-	ip->bitmap[RW_BITMAP_SHOT] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_SHOT]), T3F_RESOURCE_TYPE_BITMAP, "data/shot.png", 0, 0, 0);
-	ip->bitmap[RW_BITMAP_PARTICLE] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_PARTICLE]), T3F_RESOURCE_TYPE_BITMAP, "data/particle.png", 0, 0, 0);
-	ip->bitmap[RW_BITMAP_LOGO] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_LOGO]), T3F_RESOURCE_TYPE_BITMAP, "data/logo.png", 0, 0, 0);
-	ip->bitmap[RW_BITMAP_T3_LOGO] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_T3_LOGO]), T3F_RESOURCE_TYPE_BITMAP, "data/t3.png", 0, 0, 0);
-	ip->bitmap[RW_BITMAP_GUIDE] = t3f_load_resource((void **)(&ip->bitmap[RW_BITMAP_GUIDE]), T3F_RESOURCE_TYPE_BITMAP, "data/guide.png", 0, 0, 0);
+	ip->bitmap[RW_BITMAP_WORLD] = t3f_load_bitmap("data/world.png", T3F_BITMAP_FLAG_PADDED, false);
+	ip->bitmap[RW_BITMAP_SHIELD_0] = t3f_load_bitmap("data/shield0.png", T3F_BITMAP_FLAG_PADDED, false);
+	ip->bitmap[RW_BITMAP_SHIELD_1] = t3f_load_bitmap("data/shield1.png", T3F_BITMAP_FLAG_PADDED, false);
+	ip->bitmap[RW_BITMAP_SHIELD_2] = t3f_load_bitmap("data/shield2.png", T3F_BITMAP_FLAG_PADDED, false);
+	ip->bitmap[RW_BITMAP_SHIELD_3] = t3f_load_bitmap("data/shield3.png", T3F_BITMAP_FLAG_PADDED, false);
+	ip->bitmap[RW_BITMAP_SHIELD_4] = t3f_load_bitmap("data/shield4.png", T3F_BITMAP_FLAG_PADDED, false);
+	ip->bitmap[RW_BITMAP_SHIELD_5] = t3f_load_bitmap("data/shield5.png", T3F_BITMAP_FLAG_PADDED, false);
+	ip->bitmap[RW_BITMAP_SHIELD_6] = t3f_load_bitmap("data/shield6.png", T3F_BITMAP_FLAG_PADDED, false);
+	ip->bitmap[RW_BITMAP_SHIELD_7] = t3f_load_bitmap("data/shield7.png", T3F_BITMAP_FLAG_PADDED, false);
+	ip->bitmap[RW_BITMAP_THREAT] = t3f_load_bitmap("data/threat.png", T3F_BITMAP_FLAG_PADDED, false);
+	ip->bitmap[RW_BITMAP_BIG_THREAT] = t3f_load_bitmap("data/big_threat.png", T3F_BITMAP_FLAG_PADDED, false);
+	ip->bitmap[RW_BITMAP_SHIP] = t3f_load_bitmap("data/ship.png", T3F_BITMAP_FLAG_PADDED, false);
+	ip->bitmap[RW_BITMAP_SHOT] = t3f_load_bitmap("data/shot.png", T3F_BITMAP_FLAG_PADDED, false);
+	ip->bitmap[RW_BITMAP_PARTICLE] = t3f_load_bitmap("data/particle.png", T3F_BITMAP_FLAG_PADDED, false);
+	ip->bitmap[RW_BITMAP_LOGO] = t3f_load_bitmap("data/logo.png", T3F_BITMAP_FLAG_PADDED, false);
+	ip->bitmap[RW_BITMAP_T3_LOGO] = t3f_load_bitmap("data/t3.png", T3F_BITMAP_FLAG_PADDED, false);
+	ip->bitmap[RW_BITMAP_GUIDE] = t3f_load_bitmap("data/guide.png", T3F_BITMAP_FLAG_PADDED, false);
 	for(i = RW_BITMAP_WORLD; i <= RW_BITMAP_BIG_THREAT; i++)
 	{
 		if(!ip->bitmap[i])
@@ -58,21 +58,21 @@ int rw_initialize(RW_INSTANCE * ip, int argc, char * argv[])
 	ip->atlas = t3f_create_atlas(1024, 1024);
 	if(ip->atlas)
 	{
-		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_WORLD]);
-		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_SHIELD_0]);
-		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_SHIELD_1]);
-		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_SHIELD_2]);
-		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_SHIELD_3]);
-		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_SHIELD_4]);
-		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_SHIELD_5]);
-		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_SHIELD_6]);
-		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_SHIELD_7]);
-		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_THREAT]);
-		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_BIG_THREAT]);
-		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_SHIP]);
-		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_SHOT]);
-		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_PARTICLE]);
-		rw_atlas_bitmap(ip->atlas, &ip->bitmap[RW_BITMAP_GUIDE]);
+		rw_atlas_bitmap(ip->atlas, ip->bitmap[RW_BITMAP_WORLD]);
+		rw_atlas_bitmap(ip->atlas, ip->bitmap[RW_BITMAP_SHIELD_0]);
+		rw_atlas_bitmap(ip->atlas, ip->bitmap[RW_BITMAP_SHIELD_1]);
+		rw_atlas_bitmap(ip->atlas, ip->bitmap[RW_BITMAP_SHIELD_2]);
+		rw_atlas_bitmap(ip->atlas, ip->bitmap[RW_BITMAP_SHIELD_3]);
+		rw_atlas_bitmap(ip->atlas, ip->bitmap[RW_BITMAP_SHIELD_4]);
+		rw_atlas_bitmap(ip->atlas, ip->bitmap[RW_BITMAP_SHIELD_5]);
+		rw_atlas_bitmap(ip->atlas, ip->bitmap[RW_BITMAP_SHIELD_6]);
+		rw_atlas_bitmap(ip->atlas, ip->bitmap[RW_BITMAP_SHIELD_7]);
+		rw_atlas_bitmap(ip->atlas, ip->bitmap[RW_BITMAP_THREAT]);
+		rw_atlas_bitmap(ip->atlas, ip->bitmap[RW_BITMAP_BIG_THREAT]);
+		rw_atlas_bitmap(ip->atlas, ip->bitmap[RW_BITMAP_SHIP]);
+		rw_atlas_bitmap(ip->atlas, ip->bitmap[RW_BITMAP_SHOT]);
+		rw_atlas_bitmap(ip->atlas, ip->bitmap[RW_BITMAP_PARTICLE]);
+		rw_atlas_bitmap(ip->atlas, ip->bitmap[RW_BITMAP_GUIDE]);
 	}
 
 	ip->font = ocd_load_font("data/gamefont.pcx");

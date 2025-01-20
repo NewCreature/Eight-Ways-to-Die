@@ -889,7 +889,7 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 			rw_state_game_ship_logic(ip, 1);
 		}
 	}
-	if(t3f_key[ALLEGRO_KEY_ESCAPE] || t3f_key[ALLEGRO_KEY_BACK])
+	if(t3f_key_held(ALLEGRO_KEY_ESCAPE) || t3f_key_held(ALLEGRO_KEY_BACK))
 	{
 		ip->state = RW_STATE_GAME_OVER;
 	}
@@ -911,14 +911,14 @@ void rw_state_game_render(RW_INSTANCE * ip)
 	{
 		color = al_map_rgba_f(1.0, 1.0 - (float)ip->damage_time / 20.0, 1.0 - (float)ip->damage_time / 20.0, 1.0);
 	}
-	t3f_draw_bitmap(ip->bitmap[RW_BITMAP_WORLD], color, 640 / 2 - al_get_bitmap_width(ip->bitmap[RW_BITMAP_WORLD]) / 2, 480 / 2 - al_get_bitmap_height(ip->bitmap[RW_BITMAP_WORLD]) / 2, ip->planet_z - ip->camera_z, 0);
+	t3f_draw_bitmap(ip->bitmap[RW_BITMAP_WORLD], color, 640 / 2 - t3f_get_bitmap_width(ip->bitmap[RW_BITMAP_WORLD]) / 2, 480 / 2 - t3f_get_bitmap_height(ip->bitmap[RW_BITMAP_WORLD]) / 2, ip->planet_z - ip->camera_z, 0);
 	for(i = 0; i < 8; i++)
 	{
 		if(ip->shield_generator.shield[i].life > 0)
 		{
 			alpha = (float)ip->shield_generator.shield[i].life / (float)(RW_SHIELD_MAX_LIFE);
 			beta = ip->shield_generator.shield[i].active ? 1.0 : 0.0;
-			t3f_draw_bitmap(ip->bitmap[RW_BITMAP_SHIELD_0 + i], al_map_rgba_f(alpha, beta * alpha, beta * alpha, alpha), 640 / 2 - al_get_bitmap_width(ip->bitmap[RW_BITMAP_SHIELD_0 + i]) / 2, 480 / 2 - al_get_bitmap_height(ip->bitmap[RW_BITMAP_SHIELD_0 + i]) / 2, -ip->camera_z, 0);
+			t3f_draw_bitmap(ip->bitmap[RW_BITMAP_SHIELD_0 + i], al_map_rgba_f(alpha, beta * alpha, beta * alpha, alpha), 640 / 2 - t3f_get_bitmap_width(ip->bitmap[RW_BITMAP_SHIELD_0 + i]) / 2, 480 / 2 - t3f_get_bitmap_height(ip->bitmap[RW_BITMAP_SHIELD_0 + i]) / 2, -ip->camera_z, 0);
 		}
 	}
 	for(i = 0; i < RW_MAX_PARTICLES; i++)
@@ -937,17 +937,17 @@ void rw_state_game_render(RW_INSTANCE * ip)
 			{
 				case RW_THREAT_BASIC:
 				{
-					t3f_draw_rotated_bitmap(ip->bitmap[RW_BITMAP_THREAT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), al_get_bitmap_width(ip->bitmap[RW_BITMAP_THREAT]) / 2, al_get_bitmap_height(ip->bitmap[RW_BITMAP_THREAT]) / 2, ip->threat[i].x, ip->threat[i].y, -ip->camera_z, ip->threat[i].angle, 0);
+					t3f_draw_rotated_bitmap(ip->bitmap[RW_BITMAP_THREAT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), t3f_get_bitmap_width(ip->bitmap[RW_BITMAP_THREAT]) / 2, t3f_get_bitmap_height(ip->bitmap[RW_BITMAP_THREAT]) / 2, ip->threat[i].x, ip->threat[i].y, -ip->camera_z, ip->threat[i].angle, 0);
 					break;
 				}
 				case RW_THREAT_LARGE:
 				{
-					t3f_draw_scaled_rotated_bitmap(ip->bitmap[RW_BITMAP_BIG_THREAT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), al_get_bitmap_width(ip->bitmap[RW_BITMAP_THREAT]) / 2, al_get_bitmap_height(ip->bitmap[RW_BITMAP_THREAT]) / 2, ip->threat[i].x, ip->threat[i].y, -ip->camera_z, ip->threat[i].angle, 2.0, 2.0, 0);
+					t3f_draw_scaled_rotated_bitmap(ip->bitmap[RW_BITMAP_BIG_THREAT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), t3f_get_bitmap_width(ip->bitmap[RW_BITMAP_THREAT]) / 2, t3f_get_bitmap_height(ip->bitmap[RW_BITMAP_THREAT]) / 2, ip->threat[i].x, ip->threat[i].y, -ip->camera_z, ip->threat[i].angle, 2.0, 2.0, 0);
 					break;
 				}
 				case RW_THREAT_PIECE:
 				{
-					t3f_draw_scaled_rotated_bitmap(ip->bitmap[RW_BITMAP_BIG_THREAT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), al_get_bitmap_width(ip->bitmap[RW_BITMAP_THREAT]) / 2, al_get_bitmap_height(ip->bitmap[RW_BITMAP_THREAT]) / 2, ip->threat[i].x, ip->threat[i].y, -ip->camera_z, ip->threat[i].angle, 0.75, 0.75, 0);
+					t3f_draw_scaled_rotated_bitmap(ip->bitmap[RW_BITMAP_BIG_THREAT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), t3f_get_bitmap_width(ip->bitmap[RW_BITMAP_THREAT]) / 2, t3f_get_bitmap_height(ip->bitmap[RW_BITMAP_THREAT]) / 2, ip->threat[i].x, ip->threat[i].y, -ip->camera_z, ip->threat[i].angle, 0.75, 0.75, 0);
 					break;
 				}
 			}
@@ -957,14 +957,14 @@ void rw_state_game_render(RW_INSTANCE * ip)
 	{
 		if(ip->shot[i].active)
 		{
-			t3f_draw_bitmap(ip->bitmap[RW_BITMAP_SHOT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ip->shot[i].x - (float)al_get_bitmap_width(ip->bitmap[RW_BITMAP_SHOT]) / 2, ip->shot[i].y - (float)al_get_bitmap_height(ip->bitmap[RW_BITMAP_SHOT]) / 2, -ip->camera_z, 0);
+			t3f_draw_bitmap(ip->bitmap[RW_BITMAP_SHOT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ip->shot[i].x - (float)t3f_get_bitmap_width(ip->bitmap[RW_BITMAP_SHOT]) / 2, ip->shot[i].y - (float)t3f_get_bitmap_height(ip->bitmap[RW_BITMAP_SHOT]) / 2, -ip->camera_z, 0);
 		}
 	}
 	for(i = 0; i < RW_MAX_SHIPS; i++)
 	{
 		if(ip->ship[i].active)
 		{
-			t3f_draw_rotated_bitmap(ip->bitmap[RW_BITMAP_SHIP], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), al_get_bitmap_width(ip->bitmap[RW_BITMAP_SHIP]) / 2, al_get_bitmap_height(ip->bitmap[RW_BITMAP_SHIP]) / 2, ip->ship[i].x, ip->ship[i].y, -ip->camera_z, ip->ship[i].angle, 0);
+			t3f_draw_rotated_bitmap(ip->bitmap[RW_BITMAP_SHIP], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), t3f_get_bitmap_width(ip->bitmap[RW_BITMAP_SHIP]) / 2, t3f_get_bitmap_height(ip->bitmap[RW_BITMAP_SHIP]) / 2, ip->ship[i].x, ip->ship[i].y, -ip->camera_z, ip->ship[i].angle, 0);
 		}
 	}
 	al_draw_textf(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320 - al_get_text_width(ip->font, "HIGH SCORE - 0:00:00") / 2, t3f_default_view->top, 0, "HIGH SCORE - %d:%02d:%02d", ip->high_score / 3600, (ip->high_score / 60) % 60, (int)(((float)(ip->high_score % 60) / 60.0) * 100.0) % 100);

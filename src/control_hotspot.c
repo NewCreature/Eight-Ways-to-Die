@@ -11,17 +11,17 @@ int rw_hotspot_logic(RW_INSTANCE * ip)
 	int i;
 	
 	/* read one touch at a time and simulate key press for first touch detected */
-	for(i = 0; i < T3F_MAX_TOUCHES; i++)
+	for(i = 2; i < T3F_MAX_TOUCHES; i++)
 	{
-		if(t3f_touch[i].active)
+		if(t3f_touch_pressed(i))
 		{
-			if(t3f_touch[i].x <= 160)
+			if(t3f_get_touch_x(i) <= 160)
 			{
-				if(t3f_touch[i].y < t3f_default_view->top + ip->third)
+				if(t3f_get_touch_y(i) < t3f_default_view->top + ip->third)
 				{
 					key = '7';
 				}
-				else if(t3f_touch[i].y < t3f_default_view->top + ip->third * 2.0)
+				else if(t3f_get_touch_y(i) < t3f_default_view->top + ip->third * 2.0)
 				{
 					key = '4';
 				}
@@ -30,13 +30,13 @@ int rw_hotspot_logic(RW_INSTANCE * ip)
 					key = '1';
 				}
 			}
-			else if(t3f_touch[i].x >= 640 - 160)
+			else if(t3f_get_touch_x(i) >= 640 - 160)
 			{
-				if(t3f_touch[i].y < t3f_default_view->top + ip->third)
+				if(t3f_get_touch_y(i) < t3f_default_view->top + ip->third)
 				{
 					key = '9';
 				}
-				else if(t3f_touch[i].y < t3f_default_view->top + ip->third * 2.0)
+				else if(t3f_get_touch_y(i) < t3f_default_view->top + ip->third * 2.0)
 				{
 					key = '6';
 				}
@@ -47,7 +47,7 @@ int rw_hotspot_logic(RW_INSTANCE * ip)
 			}
 			else
 			{
-				if(t3f_touch[i].y < 240)
+				if(t3f_get_touch_y(i) < 240)
 				{
 					key = '8';
 				}
@@ -56,7 +56,7 @@ int rw_hotspot_logic(RW_INSTANCE * ip)
 					key = '2';
 				}
 			}
-			t3f_touch[i].active = false;
+			t3f_use_touch_press(i);
 			break;
 		}
 	}
@@ -69,13 +69,13 @@ void rw_render_hot_spots(RW_INSTANCE * ip)
 	
 	if((t3f_flags & T3F_USE_MOUSE) && !(t3f_flags & T3F_USE_TOUCH))
 	{
-		mouse_x = t3f_mouse_x;
-		mouse_y = t3f_mouse_y;
+		mouse_x = t3f_get_mouse_x();
+		mouse_y = t3f_get_mouse_y();
 	}
-	al_draw_tinted_bitmap(ip->bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 160.0 - 4.0, t3f_default_view->top + ip->third - 4.0, 0);
-	al_draw_tinted_bitmap(ip->bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 640.0 - 160.0 - 4.0, t3f_default_view->top + ip->third - 4.0, 0);
-	al_draw_tinted_bitmap(ip->bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 160.0 - 4.0, t3f_default_view->top + ip->third * 2.0 - 4.0, 0);
-	al_draw_tinted_bitmap(ip->bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 640.0 - 160.0 - 4.0, t3f_default_view->top + ip->third * 2.0 - 4.0, 0);
+	t3f_draw_bitmap(ip->bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 160.0 - 4.0, t3f_default_view->top + ip->third - 4.0, 0, 0);
+	t3f_draw_bitmap(ip->bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 640.0 - 160.0 - 4.0, t3f_default_view->top + ip->third - 4.0, 0, 0);
+	t3f_draw_bitmap(ip->bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 160.0 - 4.0, t3f_default_view->top + ip->third * 2.0 - 4.0, 0, 0);
+	t3f_draw_bitmap(ip->bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 640.0 - 160.0 - 4.0, t3f_default_view->top + ip->third * 2.0 - 4.0, 0, 0);
 	rw_render_hover_text(ip->font, 160.0 / 2.0, t3f_default_view->top + ip->third * 2.0 + ip->third / 2.0 - al_get_font_line_height(ip->font), ALLEGRO_ALIGN_CENTRE, mouse_x <= 160 && mouse_y >= t3f_default_view->top + ip->third * 2.0, "1");
 	rw_render_hover_text(ip->font, 320, t3f_default_view->top + ip->third * 2.0 + ip->third / 2.0 - al_get_font_line_height(ip->font), ALLEGRO_ALIGN_CENTRE, mouse_x > 160 && mouse_x < 640 - 160 && mouse_y >= t3f_default_view->top + ip->third * 2.0, "2");
 	rw_render_hover_text(ip->font, 640.0 - 160.0 / 2.0, t3f_default_view->top + ip->third * 2.0 + ip->third / 2.0 - al_get_font_line_height(ip->font), ALLEGRO_ALIGN_CENTRE, mouse_x >= 640 - 160 && mouse_y >= t3f_default_view->top + ip->third * 2.0, "3");

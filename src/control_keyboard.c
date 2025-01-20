@@ -5,7 +5,7 @@ int rw_keyboard_logic(RW_INSTANCE * ip)
 	int key = 0;
 	
 	/* read keyboard input */
-	key = t3f_read_key(0);
+	key = t3f_get_char(0);
 	if(key == 'q' || key == 'Q')
 	{
 		key = '7';

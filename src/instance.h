@@ -33,7 +33,7 @@ typedef struct
 	T3F_RNG_STATE rng_state;
 	int ticks;
 	int quit;
-	ALLEGRO_BITMAP * bitmap[RW_MAX_BITMAPS];
+	T3F_BITMAP * bitmap[RW_MAX_BITMAPS];
 	ALLEGRO_FONT * font;
 	ALLEGRO_SAMPLE * sample[RW_MAX_SAMPLES];
 	T3F_ATLAS * atlas;
