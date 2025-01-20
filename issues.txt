@@ -1,7 +1,10 @@
 Issues
 ------
 
-[X]Fix mouse menu navigation. Currently, you can't activate any menu items with
+[ ]Fix rendering of rotated objects. Rotation seems to be centered around the
+   wrong point.
+
+[ ]Fix mouse menu navigation. Currently, you can't activate any menu items with
    the mouse.
 
 [X]Fix icon set to comply with new T3F requirements.
