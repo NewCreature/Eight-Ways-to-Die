@@ -91,10 +91,10 @@ void rw_state_title_render(RW_INSTANCE * ip)
 
 	al_clear_to_color(al_map_rgb(0, 0, 0));
 	al_draw_textf(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320 - al_get_text_width(ip->font, "HIGH SCORE - 0:00:00") / 2, t3f_default_view->top, 0, "HIGH SCORE - %d:%02d:%02d", ip->high_score / 3600, (ip->high_score / 60) % 60, (int)(((float)(ip->high_score % 60) / 60.0) * 100.0) % 100);
-	t3f_draw_rotated_bitmap(ip->bitmap[RW_BITMAP_WORLD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), t3f_get_bitmap_width(ip->bitmap[RW_BITMAP_WORLD]) / 2, t3f_get_bitmap_height(ip->bitmap[RW_BITMAP_WORLD]) / 2, 640 / 2, 480 / 2, ip->intro_planet_z, ip->intro_planet_angle, 0);
+	t3f_draw_rotated_bitmap(ip->bitmap[RW_BITMAP_WORLD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ip->bitmap[RW_BITMAP_WORLD]->target_width / 2.0, ip->bitmap[RW_BITMAP_WORLD]->target_height / 2.0, 640 / 2, 480 / 2, ip->intro_planet_z, ip->intro_planet_angle, 0);
 	alpha = -ip->logo_z / 10.0;
-	t3f_draw_bitmap(ip->bitmap[RW_BITMAP_LOGO], al_map_rgba_f(alpha, alpha, alpha, alpha), 320.0 - (float)t3f_get_bitmap_width(ip->bitmap[RW_BITMAP_LOGO]) / 2, 240 - t3f_get_bitmap_height(ip->bitmap[RW_BITMAP_LOGO]) - 128, ip->logo_z + 10.0, 0);
+	t3f_draw_bitmap(ip->bitmap[RW_BITMAP_LOGO], al_map_rgba_f(alpha, alpha, alpha, alpha), 320.0 - ip->bitmap[RW_BITMAP_LOGO]->target_width / 2.0, 240 - ip->bitmap[RW_BITMAP_LOGO]->target_height - 128, ip->logo_z + 10.0, 0);
 	alpha = 1.0 + ip->logo_z / 10.0;
-	t3f_draw_bitmap(ip->bitmap[RW_BITMAP_LOGO], al_map_rgba_f(alpha, alpha, alpha, alpha), 320.0 - (float)t3f_get_bitmap_width(ip->bitmap[RW_BITMAP_LOGO]) / 2, 240 - t3f_get_bitmap_height(ip->bitmap[RW_BITMAP_LOGO]) - 128, ip->logo_z, 0);
+	t3f_draw_bitmap(ip->bitmap[RW_BITMAP_LOGO], al_map_rgba_f(alpha, alpha, alpha, alpha), 320.0 - ip->bitmap[RW_BITMAP_LOGO]->target_width / 2.0, 240 - ip->bitmap[RW_BITMAP_LOGO]->target_height - 128, ip->logo_z, 0);
 	rw_render_menu(ip);
 }
