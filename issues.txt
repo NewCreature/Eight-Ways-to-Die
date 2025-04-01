@@ -1,11 +1,21 @@
 Issues
 ------
 
+[ ]Fix display size.
+
 [ ]Swap out font.
 
 [ ]Create new logo.
 
+[ ]Create new icon.
+
 [ ]Create new Earth image.
+
+[ ]Remove intro screen.
+
+[ ]Fix app definitions.
+
+[ ]Put copyright info on title screen.
 
 [ ]Fix rendering of rotated objects. Rotation seems to be centered around the
    wrong point.
