@@ -1,6 +1,12 @@
 Issues
 ------
 
+[ ]Swap out font.
+
+[ ]Create new logo.
+
+[ ]Create new Earth image.
+
 [ ]Fix rendering of rotated objects. Rotation seems to be centered around the
    wrong point.
 
