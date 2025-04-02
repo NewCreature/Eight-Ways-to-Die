@@ -13,7 +13,7 @@ Issues
 
 [ ]Remove intro screen.
 
-[ ]Fix app definitions.
+[X]Fix app definitions.
 
 [ ]Put copyright info on title screen.
 
