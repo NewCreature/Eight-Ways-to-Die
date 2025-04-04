@@ -10,6 +10,39 @@ static void rw_atlas_bitmap(T3F_ATLAS * ap, T3F_BITMAP * bitmap)
 	t3f_add_bitmap_to_atlas(ap, &bitmap->bitmap, T3F_ATLAS_SPRITE);
 }
 
+static void _rw_set_optimal_display_size(void)
+{
+	ALLEGRO_MONITOR_INFO info;
+	int width, height;
+	int current_width = 640;
+	int current_height = 480;
+	int width_increment = 640 / 4;
+	int height_increment = 480 / 4;
+	int c = 0;
+
+	al_get_monitor_info(0, &info);
+	width = info.x2 - info.x1 - 64;
+	height = info.y2 - info.y1 - 64;
+	while(current_width < width && current_height < height)
+	{
+		current_width += width_increment;
+		current_height += height_increment;
+		c++;
+	}
+	current_width -= width_increment;
+	current_height -= height_increment;
+	if(c > 1)
+	{
+		current_width -= width_increment;
+		current_height -= height_increment;
+	}
+	if(current_width != al_get_display_width(t3f_display) || current_height != al_get_display_height(t3f_display))
+	{
+		t3f_set_gfx_mode(current_width, current_height, t3f_flags);
+		al_set_window_position(t3f_display, (info.x2 - info.x1) / 2 - current_width / 2, (info.y2 - info.y1) / 2 - current_height / 2);
+	}
+}
+
 int rw_initialize(RW_INSTANCE * ip, int argc, char * argv[])
 {
 	char buf[1024];
@@ -26,6 +59,10 @@ int rw_initialize(RW_INSTANCE * ip, int argc, char * argv[])
 	if(!t3f_initialize("Eight Ways to Die", 640, 480, 60.0, rw_logic, rw_render, flags, ip))
 	{
 		return 0;
+	}
+	if(!al_get_config_value(t3f_config, "T3F", "display_width"))
+	{
+		_rw_set_optimal_display_size();
 	}
 
 	t3f_set_event_handler(rw_event_handler);
