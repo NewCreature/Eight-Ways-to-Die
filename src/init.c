@@ -1,7 +1,6 @@
 #include "t3f/resource.h"
 #include "instance.h"
 #include "main.h"
-#include "ocdfont.h"
 #include "high_score.h"
 #include "event.h"
 
@@ -112,7 +111,7 @@ int rw_initialize(RW_INSTANCE * ip, int argc, char * argv[])
 		rw_atlas_bitmap(ip->atlas, ip->bitmap[RW_BITMAP_GUIDE]);
 	}
 
-	ip->font = ocd_load_font("data/gamefont.pcx");
+	ip->font = t3f_load_font("data/gamefont.pcx", T3F_FONT_TYPE_AUTO, 0, 0, false);
 	if(!ip->font)
 	{
 		printf("Error loading font!\n");

@@ -24,6 +24,6 @@ int rw_exit(RW_INSTANCE * ip)
 			al_destroy_sample(ip->sample[i]);
 		}
 	}
-	al_destroy_font(ip->font);
+	t3f_destroy_font(ip->font);
 	return 1;
 }

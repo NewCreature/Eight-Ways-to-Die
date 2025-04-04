@@ -3,7 +3,7 @@
 
 #include "instance.h"
 
-void rw_render_hover_text(ALLEGRO_FONT * fp, float x, float y, int flags, bool highlight, const char * text);
+void rw_render_hover_text(T3F_FONT * fp, float x, float y, int flags, bool highlight, const char * text);
 int rw_hotspot_logic(RW_INSTANCE * ip);
 void rw_render_hot_spots(RW_INSTANCE * ip);
 

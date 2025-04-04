@@ -34,8 +34,8 @@ void rw_state_privacy_render(RW_INSTANCE * ip)
 	t3f_draw_bitmap(ip->bitmap[RW_BITMAP_LOGO], al_map_rgba_f(alpha, alpha, alpha, alpha), 320.0 - ip->bitmap[RW_BITMAP_LOGO]->target_width / 2.0, 240 - ip->bitmap[RW_BITMAP_LOGO]->target_height - 128, ip->logo_z + 10.0, 0);
 	alpha = 1.0 + ip->logo_z / 10.0;
 	t3f_draw_bitmap(ip->bitmap[RW_BITMAP_LOGO], al_map_rgba_f(alpha, alpha, alpha, alpha), 320.0 - ip->bitmap[RW_BITMAP_LOGO]->target_width / 2.0, 240 - ip->bitmap[RW_BITMAP_LOGO]->target_height - 128, ip->logo_z, 0);
-	al_draw_text(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 160, 240 - al_get_font_line_height(ip->font) * 2.0, 0, "THIS GAME ONLY STORES SETTINGS");
-	al_draw_text(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 160, 240 - al_get_font_line_height(ip->font) * 1.0, 0, "AND SCORES LOCALLY. IT WILL NOT");
-	al_draw_text(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 160, 240 + al_get_font_line_height(ip->font) * 0.0, 0, "SHARE ANY INFORMATION OVER");
-	al_draw_text(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 160, 240 + al_get_font_line_height(ip->font) * 1.0, 0, "THE INTERNET.");
+	t3f_draw_text(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 160, 240 - t3f_get_font_line_height(ip->font) * 2.0, 0, 0, "THIS GAME ONLY STORES SETTINGS");
+	t3f_draw_text(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 160, 240 - t3f_get_font_line_height(ip->font) * 1.0, 0, 0, "AND SCORES LOCALLY. IT WILL NOT");
+	t3f_draw_text(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 160, 240 + t3f_get_font_line_height(ip->font) * 0.0, 0, 0, "SHARE ANY INFORMATION OVER");
+	t3f_draw_text(ip->font, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 160, 240 + t3f_get_font_line_height(ip->font) * 1.0, 0, 0, "THE INTERNET.");
 }

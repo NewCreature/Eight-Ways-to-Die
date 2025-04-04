@@ -34,7 +34,7 @@ typedef struct
 	int ticks;
 	int quit;
 	T3F_BITMAP * bitmap[RW_MAX_BITMAPS];
-	ALLEGRO_FONT * font;
+	T3F_FONT * font;
 	ALLEGRO_SAMPLE * sample[RW_MAX_SAMPLES];
 	T3F_ATLAS * atlas;
 	int control_mode;

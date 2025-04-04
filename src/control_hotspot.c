@@ -1,8 +1,9 @@
+#include "t3f/t3f.h"
 #include "instance.h"
 
-void rw_render_hover_text(ALLEGRO_FONT * fp, float x, float y, int flags, bool highlight, const char * text)
+void rw_render_hover_text(T3F_FONT * fp, float x, float y, int flags, bool highlight, const char * text)
 {
-	al_draw_text(fp, highlight ? al_map_rgba_f(1.0, 1.0, 1.0, 1.0) : al_map_rgba_f(0.25, 0.25, 0.25, 0.25), x, y, flags, text);
+	t3f_draw_text(fp, highlight ? al_map_rgba_f(1.0, 1.0, 1.0, 1.0) : al_map_rgba_f(0.25, 0.25, 0.25, 0.25), x, y, 0, flags, text);
 }
 
 int rw_hotspot_logic(RW_INSTANCE * ip)
@@ -76,13 +77,13 @@ void rw_render_hot_spots(RW_INSTANCE * ip)
 	t3f_draw_bitmap(ip->bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 640.0 - 160.0 - 4.0, t3f_default_view->top + ip->third - 4.0, 0, 0);
 	t3f_draw_bitmap(ip->bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 160.0 - 4.0, t3f_default_view->top + ip->third * 2.0 - 4.0, 0, 0);
 	t3f_draw_bitmap(ip->bitmap[RW_BITMAP_GUIDE], al_map_rgba_f(0.25, 0.25, 0.25, 0.25), 640.0 - 160.0 - 4.0, t3f_default_view->top + ip->third * 2.0 - 4.0, 0, 0);
-	rw_render_hover_text(ip->font, 160.0 / 2.0, t3f_default_view->top + ip->third * 2.0 + ip->third / 2.0 - al_get_font_line_height(ip->font), ALLEGRO_ALIGN_CENTRE, mouse_x <= 160 && mouse_y >= t3f_default_view->top + ip->third * 2.0, "1");
-	rw_render_hover_text(ip->font, 320, t3f_default_view->top + ip->third * 2.0 + ip->third / 2.0 - al_get_font_line_height(ip->font), ALLEGRO_ALIGN_CENTRE, mouse_x > 160 && mouse_x < 640 - 160 && mouse_y >= t3f_default_view->top + ip->third * 2.0, "2");
-	rw_render_hover_text(ip->font, 640.0 - 160.0 / 2.0, t3f_default_view->top + ip->third * 2.0 + ip->third / 2.0 - al_get_font_line_height(ip->font), ALLEGRO_ALIGN_CENTRE, mouse_x >= 640 - 160 && mouse_y >= t3f_default_view->top + ip->third * 2.0, "3");
-	rw_render_hover_text(ip->font, 160.0 / 2.0, t3f_default_view->top + ip->third / 2.0 - al_get_font_line_height(ip->font), ALLEGRO_ALIGN_CENTRE, mouse_x <= 160 && mouse_y < t3f_default_view->top + ip->third, "7");
-	rw_render_hover_text(ip->font, 160.0 / 2.0, t3f_default_view->top + ip->third + ip->third / 2.0 - al_get_font_line_height(ip->font), ALLEGRO_ALIGN_CENTRE, mouse_x <= 160 && mouse_y > t3f_default_view->top + ip->third && mouse_y < t3f_default_view->top + ip->third * 2.0, "4");
-	rw_render_hover_text(ip->font, 640.0 - 160.0 / 2.0, t3f_default_view->top + ip->third / 2.0 - al_get_font_line_height(ip->font), ALLEGRO_ALIGN_CENTRE, mouse_x >= 640 - 160 && mouse_y < t3f_default_view->top + ip->third, "9");
-	rw_render_hover_text(ip->font, 640.0 - 160.0 / 2.0, t3f_default_view->top + ip->third + ip->third / 2.0 - al_get_font_line_height(ip->font), ALLEGRO_ALIGN_CENTRE, mouse_x >= 640 - 160 && mouse_y > t3f_default_view->top + ip->third && mouse_y < t3f_default_view->top + ip->third * 2.0, "6");
-	rw_render_hover_text(ip->font, 320.0, t3f_default_view->top + ip->third / 2.0 - al_get_font_line_height(ip->font), ALLEGRO_ALIGN_CENTRE, mouse_x > 160 && mouse_x < 640 - 160 && mouse_y < t3f_default_view->top + ip->third, "8");
+	rw_render_hover_text(ip->font, 160.0 / 2.0, t3f_default_view->top + ip->third * 2.0 + ip->third / 2.0 - t3f_get_font_line_height(ip->font), T3F_FONT_ALIGN_CENTER, mouse_x <= 160 && mouse_y >= t3f_default_view->top + ip->third * 2.0, "1");
+	rw_render_hover_text(ip->font, 320, t3f_default_view->top + ip->third * 2.0 + ip->third / 2.0 - t3f_get_font_line_height(ip->font), T3F_FONT_ALIGN_CENTER, mouse_x > 160 && mouse_x < 640 - 160 && mouse_y >= t3f_default_view->top + ip->third * 2.0, "2");
+	rw_render_hover_text(ip->font, 640.0 - 160.0 / 2.0, t3f_default_view->top + ip->third * 2.0 + ip->third / 2.0 - t3f_get_font_line_height(ip->font), T3F_FONT_ALIGN_CENTER, mouse_x >= 640 - 160 && mouse_y >= t3f_default_view->top + ip->third * 2.0, "3");
+	rw_render_hover_text(ip->font, 160.0 / 2.0, t3f_default_view->top + ip->third / 2.0 - t3f_get_font_line_height(ip->font), T3F_FONT_ALIGN_CENTER, mouse_x <= 160 && mouse_y < t3f_default_view->top + ip->third, "7");
+	rw_render_hover_text(ip->font, 160.0 / 2.0, t3f_default_view->top + ip->third + ip->third / 2.0 - t3f_get_font_line_height(ip->font), T3F_FONT_ALIGN_CENTER, mouse_x <= 160 && mouse_y > t3f_default_view->top + ip->third && mouse_y < t3f_default_view->top + ip->third * 2.0, "4");
+	rw_render_hover_text(ip->font, 640.0 - 160.0 / 2.0, t3f_default_view->top + ip->third / 2.0 - t3f_get_font_line_height(ip->font), T3F_FONT_ALIGN_CENTER, mouse_x >= 640 - 160 && mouse_y < t3f_default_view->top + ip->third, "9");
+	rw_render_hover_text(ip->font, 640.0 - 160.0 / 2.0, t3f_default_view->top + ip->third + ip->third / 2.0 - t3f_get_font_line_height(ip->font), T3F_FONT_ALIGN_CENTER, mouse_x >= 640 - 160 && mouse_y > t3f_default_view->top + ip->third && mouse_y < t3f_default_view->top + ip->third * 2.0, "6");
+	rw_render_hover_text(ip->font, 320.0, t3f_default_view->top + ip->third / 2.0 - t3f_get_font_line_height(ip->font), T3F_FONT_ALIGN_CENTER, mouse_x > 160 && mouse_x < 640 - 160 && mouse_y < t3f_default_view->top + ip->third, "8");
 }
 
