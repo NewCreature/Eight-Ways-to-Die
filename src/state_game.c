@@ -114,12 +114,7 @@ static int rw_generate_threat(RW_INSTANCE * ip, int type)
 				case RW_THREAT_BASIC:
 				{
 					r = t3f_rand(&ip->rng_state) % 8;
-//					ip->threat[i].gen_speed = 1.6 + (float)(t3f_rand(&ip->rng_state) % 100) / 40.0;
 					ip->threat[i].gen_speed = rw_level_threat_base_speed[ip->level] + t3f_drand(&ip->rng_state) * rw_level_threat_speed[ip->level];
-					if(r == 1 && r == 5)
-					{
-						ip->threat[i].gen_speed *= ip->vertical_scale;
-					}
 					ip->threat[i].gen_angle = rw_eight_ways[r] + (t3f_drand(&ip->rng_state) - 0.5) / 10.0;
 					ip->threat[i].x = 320.0 + cos(ip->threat[i].gen_angle) * 400.0;
 					ip->threat[i].y = 240.0 + sin(ip->threat[i].gen_angle) * 400.0;
@@ -137,10 +132,6 @@ static int rw_generate_threat(RW_INSTANCE * ip, int type)
 				{
 					r = t3f_rand(&ip->rng_state) % 8;
 					ip->threat[i].gen_speed = rw_level_threat_base_speed[ip->level] + t3f_drand(&ip->rng_state) * rw_level_threat_speed[ip->level];
-					if(r == 1 && r == 5)
-					{
-						ip->threat[i].gen_speed *= ip->vertical_scale;
-					}
 					ip->threat[i].gen_angle = rw_eight_ways[r] + (t3f_drand(&ip->rng_state) - 0.5) / 10.0;
 					ip->threat[i].x = 320.0 + cos(ip->threat[i].gen_angle) * 400.0;
 					ip->threat[i].y = 240.0 + sin(ip->threat[i].gen_angle) * 400.0;
