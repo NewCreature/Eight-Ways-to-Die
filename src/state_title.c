@@ -27,6 +27,7 @@ static void rw_render_menu(RW_INSTANCE * ip)
 	rw_render_hover_text(ip->font, 160.0 / 2.0, t3f_default_view->top + ip->third * 2.0 + ip->third / 2.0, T3F_FONT_ALIGN_CENTER, mouse_x <= 160 && mouse_y >= t3f_default_view->top + ip->third * 2.0, "PRIVACY INFO");
 	rw_render_hover_text(ip->font, 320, t3f_default_view->top + ip->third * 2.0 + ip->third / 2.0, T3F_FONT_ALIGN_CENTER, mouse_x > 160 && mouse_x < 640 - 160 && mouse_y >= t3f_default_view->top + ip->third * 2.0, "START GAME");
 	rw_render_hover_text(ip->font, 640.0 - 160.0 / 2.0, t3f_default_view->top + ip->third * 2.0 + ip->third / 2.0, T3F_FONT_ALIGN_CENTER, mouse_x >= 640 - 160 && mouse_y >= t3f_default_view->top + ip->third * 2.0, "TOGGLE MUSIC");
+	t3f_draw_text(ip->font, t3f_color_white, t3f_default_view->virtual_width / 2.0, t3f_default_view->virtual_height - t3f_get_font_line_height(ip->font), 0, T3F_FONT_ALIGN_CENTER, T3F_APP_COPYRIGHT);
 }
 
 void rw_title_logo_logic(RW_INSTANCE * ip)

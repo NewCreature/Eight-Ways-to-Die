@@ -53,6 +53,7 @@ RW_INSTANCE * rw_create_instance(void)
 		ip->third = 160.0;
 		ip->threat_wait = 0;
 		ip->big_threat_wait = 0;
+		ip->intro_state = 2;
 	}
 	return ip;
 }

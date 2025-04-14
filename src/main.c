@@ -17,7 +17,6 @@ int main(int argc, char * argv[])
 		{
 			t3f_play_music("data/title.xm");
 		}
-		al_play_sample(instance->sample[RW_SAMPLE_LOGO], 0.5, 0.5, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
 		t3f_run();
 	}
 	else
