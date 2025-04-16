@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="402"
+   height="42"
+   viewBox="0 0 106.3625 11.1125"
+   version="1.1"
+   id="svg1"
+   inkscape:export-filename="logo.png"
+   inkscape:export-xdpi="111.52"
+   inkscape:export-ydpi="111.52"
+   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"
+   sodipodi:docname="logo.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     inkscape:zoom="1.0482005"
+     inkscape:cx="255.19927"
+     inkscape:cy="23.373391"
+     inkscape:window-width="1104"
+     inkscape:window-height="640"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <text
+       xml:space="preserve"
+       style="font-size:9.87778px;line-height:1.25;font-family:'Titan One';-inkscape-font-specification:'Titan One';font-variant-ligatures:none;text-align:center;text-anchor:middle;stroke-width:0.52916667;fill:none;fill-opacity:1;stroke:#ffffff;stroke-opacity:1;stroke-dasharray:none"
+       x="53.107162"
+       y="8.6430559"
+       id="text1"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         style="font-size:9.87778px;stroke-width:0.52916667;fill:none;fill-opacity:1;stroke:#ffffff;stroke-opacity:1;stroke-dasharray:none"
+         x="53.107162"
+         y="8.6430559">Eight Ways to Die</tspan></text>
+  </g>
+</svg>
