@@ -3,15 +3,17 @@ Issues
 
 [X]Fix display size.
 
-[ ]Swap out font.
+[X]Swap out font.
 
-[ ]Create new logo.
+[X]Create new logo.
+
+[ ]Update copyright document.
 
 [ ]Create new icon.
 
 [ ]Create new Earth image.
 
-[ ]Remove intro screen.
+[X]Remove intro screen.
 
 [ ]Fix mouse clicks leaking through state changes.
 
