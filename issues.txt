@@ -9,6 +9,10 @@ Issues
 
 [ ]Update copyright document.
 
+[ ]Fix HUD rendering.
+
+   [ ]Render time digits in monospace.
+
 [ ]Create new icon.
 
 [ ]Create new Earth image.
