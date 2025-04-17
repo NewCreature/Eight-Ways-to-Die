@@ -7,6 +7,8 @@ Issues
 
 [X]Create new logo.
 
+[ ]Use new keyboard input handler.
+
 [ ]Update copyright document.
 
 [X]Fix HUD rendering.
