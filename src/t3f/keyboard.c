@@ -24,6 +24,12 @@ typedef struct
 /* keyboard data */
 static _T3F_KEY_STATE * _t3f_key_state = NULL;
 static _T3F_KEY_BUFFER * _t3f_key_buffer = NULL;
+static bool _t3f_key_repeat_enabled = true;
+
+void t3f_set_key_repeat(bool onoff)
+{
+	_t3f_key_repeat_enabled = onoff;
+}
 
 static void _handle_key_press(int keycode)
 {
@@ -53,13 +59,16 @@ void _t3f_handle_keyboard_event(ALLEGRO_EVENT * event)
 		/* key was pressed or repeated */
 		case ALLEGRO_EVENT_KEY_DOWN:
 		{
-			_handle_key_press(event->keyboard.keycode);
-			#ifdef ALLEGRO_MACOSX
-				if(event->keyboard.keycode == ALLEGRO_KEY_LSHIFT)
-				{
-					_handle_key_press(ALLEGRO_KEY_RSHIFT);
-				}
-			#endif
+			if(!event->keyboard.repeat || _t3f_key_repeat_enabled)
+			{
+				_handle_key_press(event->keyboard.keycode);
+				#ifdef ALLEGRO_MACOSX
+					if(event->keyboard.keycode == ALLEGRO_KEY_LSHIFT)
+					{
+						_handle_key_press(ALLEGRO_KEY_RSHIFT);
+					}
+				#endif
+			}
 			break;
 		}
 
@@ -83,7 +92,7 @@ void _t3f_handle_keyboard_event(ALLEGRO_EVENT * event)
 			{
 				t3f_put_char(event->keyboard.unichar);
 			}
-			if(event->keyboard.repeat)
+			if(event->keyboard.repeat && _t3f_key_repeat_enabled)
 			{
 				_handle_key_press(event->keyboard.keycode);
 			}
