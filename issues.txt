@@ -9,9 +9,9 @@ Issues
 
 [ ]Update copyright document.
 
-[ ]Fix HUD rendering.
+[X]Fix HUD rendering.
 
-   [ ]Render time digits in monospace.
+   [X]Render time digits in monospace.
 
 [ ]Create new icon.
 
