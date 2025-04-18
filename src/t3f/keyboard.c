@@ -85,9 +85,12 @@ void _t3f_handle_keyboard_event(ALLEGRO_EVENT * event)
 		/* a character was entered */
 		case ALLEGRO_EVENT_KEY_CHAR:
 		{
-			if(event->keyboard.unichar != -1)
+			if(_t3f_key_repeat_enabled || !event->keyboard.repeat)
 			{
-				t3f_put_char(event->keyboard.unichar);
+				if(event->keyboard.unichar != -1)
+				{
+					t3f_put_char(event->keyboard.unichar);
+				}
 			}
 			if(event->keyboard.repeat && _t3f_key_repeat_enabled)
 			{
