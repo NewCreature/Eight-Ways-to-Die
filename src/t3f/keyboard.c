@@ -59,16 +59,13 @@ void _t3f_handle_keyboard_event(ALLEGRO_EVENT * event)
 		/* key was pressed or repeated */
 		case ALLEGRO_EVENT_KEY_DOWN:
 		{
-			if(!event->keyboard.repeat || _t3f_key_repeat_enabled)
-			{
-				_handle_key_press(event->keyboard.keycode);
-				#ifdef ALLEGRO_MACOSX
-					if(event->keyboard.keycode == ALLEGRO_KEY_LSHIFT)
-					{
-						_handle_key_press(ALLEGRO_KEY_RSHIFT);
-					}
-				#endif
-			}
+			_handle_key_press(event->keyboard.keycode);
+			#ifdef ALLEGRO_MACOSX
+				if(event->keyboard.keycode == ALLEGRO_KEY_LSHIFT)
+				{
+					_handle_key_press(ALLEGRO_KEY_RSHIFT);
+				}
+			#endif
 			break;
 		}
 
