@@ -38,5 +38,10 @@ int rw_keyboard_logic(RW_INSTANCE * ip)
 	{
 		key = '3';
 	}
+	else if(t3f_key_pressed(ALLEGRO_KEY_BACK))
+	{
+		key = 27;
+		t3f_use_key_press(ALLEGRO_KEY_BACK);
+	}
 	return key;
 }	

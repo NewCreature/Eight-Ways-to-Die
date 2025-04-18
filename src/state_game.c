@@ -881,10 +881,6 @@ void rw_state_game_logic(RW_INSTANCE * ip)
 			rw_state_game_ship_logic(ip, 1);
 		}
 	}
-	if(t3f_key_held(ALLEGRO_KEY_ESCAPE) || t3f_key_held(ALLEGRO_KEY_BACK))
-	{
-		ip->state = RW_STATE_GAME_OVER;
-	}
 }
 
 void rw_state_game_render(RW_INSTANCE * ip)
