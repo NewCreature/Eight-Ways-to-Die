@@ -310,26 +310,18 @@ float t3f_project_y(float y, float z)
 /* apply a transformation to render starting at (x, y, z) */
 void t3f_set_view_render_offset(float x, float y, float z)
 {
-	float final_x, final_y;
+	float final_x, final_y, final_x2, final_y2;
 	float final_scale_x, final_scale_y;
-	float z_scale = t3f_project_x(1.0, z) - t3f_project_x(0.0, z);
 	ALLEGRO_TRANSFORM new_transform;
 
-	final_x = t3f_default_view->translate_x;
-	final_y = t3f_default_view->translate_y;
-	final_scale_x = t3f_default_view->scale_x;
-	final_scale_y = t3f_default_view->scale_y;
-	if(t3f_current_view != t3f_default_view)
-	{
-		final_x += t3f_current_view->translate_x * t3f_default_view->scale_x;
-		final_y += t3f_current_view->translate_y * t3f_default_view->scale_y;
-		final_scale_x *= t3f_current_view->scale_x;
-		final_scale_y *= t3f_current_view->scale_y;
-	}
-	final_x += x * final_scale_x;
-	final_y += y * final_scale_y;
-	final_scale_x *= z_scale;
-	final_scale_y *= z_scale;
+	final_x = t3f_project_x(x, z);
+	final_y = t3f_project_y(y, z);
+	final_x2 = t3f_project_x(x + 1.0, z);
+	final_y2 = t3f_project_y(y + 1.0, z);
+	al_transform_coordinates(&t3f_current_view->transform, &final_x, &final_y);
+	al_transform_coordinates(&t3f_current_view->transform, &final_x2, &final_y2);
+	final_scale_x = final_x2 - final_x;
+	final_scale_y = final_y2 - final_y;
 	al_build_transform(&new_transform, final_x, final_y, final_scale_x, final_scale_y, 0.0);
 	al_use_transform(&new_transform);
 }
