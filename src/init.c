@@ -59,6 +59,7 @@ int rw_initialize(RW_INSTANCE * ip, int argc, char * argv[])
 	{
 		return 0;
 	}
+	t3f_set_key_repeat(false);
 	if(!al_get_config_value(t3f_config, "T3F", "display_width"))
 	{
 		_rw_set_optimal_display_size();
