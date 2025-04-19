@@ -2,26 +2,6 @@
 
 #include "t3f/draw.h"
 
-static bool check_intro_cancel(RW_INSTANCE * ip)
-{
-	int i;
-
-	for(i = 0; i < T3F_MAX_TOUCHES; i++)
-	{
-		if(t3f_touch_pressed(i))
-		{
-			t3f_use_touch_press(i);
-			return true;
-		}
-	}
-	if(t3f_char_in_buffer() || t3f_mouse_button_pressed(0))
-	{
-		t3f_use_mouse_button_press(0);
-		return true;
-	}
-	return false;
-}
-
 static void finish_intro(RW_INSTANCE * ip)
 {
 	ip->intro_planet_z = -400.0;
