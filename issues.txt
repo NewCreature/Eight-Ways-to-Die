@@ -19,7 +19,7 @@ Issues
 
 [X]Remove intro screen.
 
-[ ]Fix mouse clicks leaking through state changes.
+[X]Fix mouse clicks leaking through state changes.
 
 [X]Fix app definitions.
 
