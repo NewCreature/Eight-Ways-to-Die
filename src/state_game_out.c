@@ -7,6 +7,7 @@ void rw_state_game_out_logic(RW_INSTANCE * ip)
 	if(ip->intro_planet_z <= -400.0)
 	{
 		ip->intro_planet_z = -400.0;
+		t3f_clear_touch_state();
 		ip->state = RW_STATE_TITLE;
 	}
 }
