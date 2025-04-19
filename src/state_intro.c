@@ -75,14 +75,6 @@ void rw_state_intro_logic(RW_INSTANCE * ip)
 			break;
 		}
 	}
-	if(t3f_key_held(ALLEGRO_KEY_ESCAPE) || t3f_key_held(ALLEGRO_KEY_BACK))
-	{
-		ip->quit = 1;
-	}
-	else if(check_intro_cancel(ip))
-	{
-		finish_intro(ip);
-	}
 }
 
 void rw_state_intro_render(RW_INSTANCE * ip)

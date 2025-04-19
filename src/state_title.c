@@ -79,11 +79,9 @@ void rw_state_title_logic(RW_INSTANCE * ip)
 	{
 		rw_toggle_music(ip);
 	}
-	if(t3f_key_pressed(ALLEGRO_KEY_ESCAPE) || t3f_key_pressed(ALLEGRO_KEY_BACK))
+	else if(key == 27)
 	{
 		ip->state = RW_STATE_EXIT;
-		t3f_use_key_press(ALLEGRO_KEY_ESCAPE);
-		t3f_use_key_press(ALLEGRO_KEY_BACK);
 	}
 }
 

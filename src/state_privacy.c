@@ -17,11 +17,9 @@ void rw_state_privacy_logic(RW_INSTANCE * ip)
 	{
 		key = rw_hotspot_logic(ip);
 	}
-	if(t3f_key_pressed(ALLEGRO_KEY_ESCAPE) || t3f_key_pressed(ALLEGRO_KEY_BACK) || key)
+	if(key)
 	{
 		ip->state = RW_STATE_TITLE;
-		t3f_use_key_press(ALLEGRO_KEY_ESCAPE);
-		t3f_use_key_press(ALLEGRO_KEY_BACK);
 	}
 }
 
