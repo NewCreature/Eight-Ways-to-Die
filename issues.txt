@@ -7,7 +7,7 @@ Issues
 
 [X]Create new logo.
 
-[ ]Update copyright document.
+[X]Update copyright document.
 
 [X]Fix HUD rendering.
 
