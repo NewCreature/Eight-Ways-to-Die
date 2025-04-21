@@ -1,6 +1,10 @@
 Issues
 ------
 
+[ ]Update changelog.
+
+[ ]Bump up version number.
+
 [X]Fix display size.
 
 [X]Swap out font.
