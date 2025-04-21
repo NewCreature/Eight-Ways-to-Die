@@ -1,6 +1,8 @@
 Issues
 ------
 
+[ ]Move docs to 'docs' folder.
+
 [ ]Update changelog.
 
 [ ]Bump up version number.
@@ -17,9 +19,9 @@ Issues
 
    [X]Render time digits in monospace.
 
-[ ]Create new icon.
+[X]Create new icon.
 
-[ ]Create new Earth image.
+[X]Create new Earth image.
 
 [X]Remove intro screen.
 
